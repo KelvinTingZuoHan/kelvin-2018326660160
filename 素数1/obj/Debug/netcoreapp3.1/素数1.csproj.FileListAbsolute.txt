@@ -1,0 +1,13 @@
+N:\C#\素数1\素数1\bin\Debug\netcoreapp3.1\素数1.exe
+N:\C#\素数1\素数1\bin\Debug\netcoreapp3.1\素数1.deps.json
+N:\C#\素数1\素数1\bin\Debug\netcoreapp3.1\素数1.runtimeconfig.json
+N:\C#\素数1\素数1\bin\Debug\netcoreapp3.1\素数1.runtimeconfig.dev.json
+N:\C#\素数1\素数1\bin\Debug\netcoreapp3.1\素数1.dll
+N:\C#\素数1\素数1\bin\Debug\netcoreapp3.1\素数1.pdb
+N:\C#\素数1\素数1\obj\Debug\netcoreapp3.1\素数1.csprojAssemblyReference.cache
+N:\C#\素数1\素数1\obj\Debug\netcoreapp3.1\素数1.csproj.CoreCompileInputs.cache
+N:\C#\素数1\素数1\obj\Debug\netcoreapp3.1\素数1.AssemblyInfoInputs.cache
+N:\C#\素数1\素数1\obj\Debug\netcoreapp3.1\素数1.AssemblyInfo.cs
+N:\C#\素数1\素数1\obj\Debug\netcoreapp3.1\素数1.dll
+N:\C#\素数1\素数1\obj\Debug\netcoreapp3.1\素数1.pdb
+N:\C#\素数1\素数1\obj\Debug\netcoreapp3.1\素数1.genruntimeconfig.cache
