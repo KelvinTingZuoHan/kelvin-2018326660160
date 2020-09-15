@@ -1,0 +1,13 @@
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\bin\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.exe
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\bin\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.deps.json
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\bin\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.runtimeconfig.json
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\bin\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.runtimeconfig.dev.json
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\bin\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.dll
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\bin\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.pdb
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\obj\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.csprojAssemblyReference.cache
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\obj\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.csproj.CoreCompileInputs.cache
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\obj\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.AssemblyInfoInputs.cache
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\obj\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.AssemblyInfo.cs
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\obj\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.dll
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\obj\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.pdb
+N:\C#\第一次课堂作业（二）第四题\第一次课堂作业（二）第四题\obj\Debug\netcoreapp3.1\第一次课堂作业（二）第四题.genruntimeconfig.cache

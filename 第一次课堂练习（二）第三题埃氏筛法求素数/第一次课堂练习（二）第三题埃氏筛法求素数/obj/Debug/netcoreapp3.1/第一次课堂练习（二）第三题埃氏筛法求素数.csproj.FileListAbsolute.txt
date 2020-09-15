@@ -1,0 +1,13 @@
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\obj\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.csprojAssemblyReference.cache
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\obj\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.csproj.CoreCompileInputs.cache
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\obj\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.AssemblyInfoInputs.cache
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\obj\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.AssemblyInfo.cs
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\bin\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.exe
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\bin\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.deps.json
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\bin\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.runtimeconfig.json
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\bin\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.runtimeconfig.dev.json
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\bin\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.dll
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\bin\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.pdb
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\obj\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.dll
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\obj\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.pdb
+N:\C#\第一次课堂练习（二）第三题埃氏筛法求素数\第一次课堂练习（二）第三题埃氏筛法求素数\obj\Debug\netcoreapp3.1\第一次课堂练习（二）第三题埃氏筛法求素数.genruntimeconfig.cache
