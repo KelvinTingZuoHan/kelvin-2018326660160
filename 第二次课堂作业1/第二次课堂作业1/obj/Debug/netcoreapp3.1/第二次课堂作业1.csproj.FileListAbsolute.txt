@@ -1,0 +1,13 @@
+N:\C#\第二次课堂作业1\第二次课堂作业1\obj\Debug\netcoreapp3.1\第二次课堂作业1.csprojAssemblyReference.cache
+N:\C#\第二次课堂作业1\第二次课堂作业1\obj\Debug\netcoreapp3.1\第二次课堂作业1.csproj.CoreCompileInputs.cache
+N:\C#\第二次课堂作业1\第二次课堂作业1\obj\Debug\netcoreapp3.1\第二次课堂作业1.AssemblyInfoInputs.cache
+N:\C#\第二次课堂作业1\第二次课堂作业1\obj\Debug\netcoreapp3.1\第二次课堂作业1.AssemblyInfo.cs
+N:\C#\第二次课堂作业1\第二次课堂作业1\bin\Debug\netcoreapp3.1\第二次课堂作业1.exe
+N:\C#\第二次课堂作业1\第二次课堂作业1\bin\Debug\netcoreapp3.1\第二次课堂作业1.deps.json
+N:\C#\第二次课堂作业1\第二次课堂作业1\bin\Debug\netcoreapp3.1\第二次课堂作业1.runtimeconfig.json
+N:\C#\第二次课堂作业1\第二次课堂作业1\bin\Debug\netcoreapp3.1\第二次课堂作业1.runtimeconfig.dev.json
+N:\C#\第二次课堂作业1\第二次课堂作业1\bin\Debug\netcoreapp3.1\第二次课堂作业1.dll
+N:\C#\第二次课堂作业1\第二次课堂作业1\bin\Debug\netcoreapp3.1\第二次课堂作业1.pdb
+N:\C#\第二次课堂作业1\第二次课堂作业1\obj\Debug\netcoreapp3.1\第二次课堂作业1.dll
+N:\C#\第二次课堂作业1\第二次课堂作业1\obj\Debug\netcoreapp3.1\第二次课堂作业1.pdb
+N:\C#\第二次课堂作业1\第二次课堂作业1\obj\Debug\netcoreapp3.1\第二次课堂作业1.genruntimeconfig.cache
