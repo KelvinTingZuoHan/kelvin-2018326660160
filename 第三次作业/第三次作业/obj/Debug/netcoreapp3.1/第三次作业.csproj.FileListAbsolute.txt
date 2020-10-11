@@ -1,0 +1,13 @@
+N:\C#\第三次作业\第三次作业\obj\Debug\netcoreapp3.1\第三次作业.csprojAssemblyReference.cache
+N:\C#\第三次作业\第三次作业\obj\Debug\netcoreapp3.1\第三次作业.AssemblyInfoInputs.cache
+N:\C#\第三次作业\第三次作业\obj\Debug\netcoreapp3.1\第三次作业.AssemblyInfo.cs
+N:\C#\第三次作业\第三次作业\obj\Debug\netcoreapp3.1\第三次作业.csproj.CoreCompileInputs.cache
+N:\C#\第三次作业\第三次作业\bin\Debug\netcoreapp3.1\第三次作业.exe
+N:\C#\第三次作业\第三次作业\bin\Debug\netcoreapp3.1\第三次作业.deps.json
+N:\C#\第三次作业\第三次作业\bin\Debug\netcoreapp3.1\第三次作业.runtimeconfig.json
+N:\C#\第三次作业\第三次作业\bin\Debug\netcoreapp3.1\第三次作业.runtimeconfig.dev.json
+N:\C#\第三次作业\第三次作业\bin\Debug\netcoreapp3.1\第三次作业.dll
+N:\C#\第三次作业\第三次作业\bin\Debug\netcoreapp3.1\第三次作业.pdb
+N:\C#\第三次作业\第三次作业\obj\Debug\netcoreapp3.1\第三次作业.dll
+N:\C#\第三次作业\第三次作业\obj\Debug\netcoreapp3.1\第三次作业.pdb
+N:\C#\第三次作业\第三次作业\obj\Debug\netcoreapp3.1\第三次作业.genruntimeconfig.cache
