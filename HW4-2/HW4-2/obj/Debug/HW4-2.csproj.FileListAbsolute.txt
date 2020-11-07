@@ -1,0 +1,16 @@
+C:\Users\zhang\Desktop\HW4-2\HW4-2\bin\Debug\exp3_window.exe.config
+C:\Users\zhang\Desktop\HW4-2\HW4-2\bin\Debug\exp3_window.exe
+C:\Users\zhang\Desktop\HW4-2\HW4-2\bin\Debug\exp3_window.pdb
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\HW4-2.csprojAssemblyReference.cache
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\HW4_2.Add.resources
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\HW4_2.ChooseOrder.resources
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\HW4_2.Find.resources
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\HW4_2.displayWindow.resources
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\HW4_2.Modify.resources
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\HW4_2.order_management_system.resources
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\exp3_window.Properties.Resources.resources
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\HW4_2.warning.resources
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\HW4-2.csproj.GenerateResource.cache
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\HW4-2.csproj.CoreCompileInputs.cache
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\exp3_window.exe
+C:\Users\zhang\Desktop\HW4-2\HW4-2\obj\Debug\exp3_window.pdb

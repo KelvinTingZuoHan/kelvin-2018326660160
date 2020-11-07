@@ -1,0 +1,32 @@
+F:\.net course\course_code\exp4\exp3_window\bin\Debug\exp3_window.exe.config
+F:\.net course\course_code\exp4\exp3_window\bin\Debug\exp3_window.exe
+F:\.net course\course_code\exp4\exp3_window\bin\Debug\exp3_window.pdb
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.csprojAssemblyReference.cache
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.Properties.Resources.resources
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.csproj.GenerateResource.cache
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.csproj.CoreCompileInputs.cache
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.exe
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.pdb
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.order_management_system.resources
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.Add.resources
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.warning.resources
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.Find.resources
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.displayWindow.resources
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.ChooseOrder.resources
+F:\.net course\course_code\exp4\exp3_window\obj\Debug\exp3_window.Modify.resources
+C:\Users\zhang\Desktop\exp4\exp3_window\bin\Debug\exp3_window.exe.config
+C:\Users\zhang\Desktop\exp4\exp3_window\bin\Debug\exp3_window.exe
+C:\Users\zhang\Desktop\exp4\exp3_window\bin\Debug\exp3_window.pdb
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.csprojAssemblyReference.cache
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.Add.resources
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.ChooseOrder.resources
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.Find.resources
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.displayWindow.resources
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.Modify.resources
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.order_management_system.resources
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.Properties.Resources.resources
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.warning.resources
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.csproj.GenerateResource.cache
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.csproj.CoreCompileInputs.cache
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.exe
+C:\Users\zhang\Desktop\exp4\exp3_window\obj\Debug\exp3_window.pdb

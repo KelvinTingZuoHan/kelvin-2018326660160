@@ -1,0 +1,20 @@
+F:\.net course\course_code\exp4\exp4\bin\Debug\exp4.exe.config
+F:\.net course\course_code\exp4\exp4\bin\Debug\exp4.exe
+F:\.net course\course_code\exp4\exp4\bin\Debug\exp4.pdb
+F:\.net course\course_code\exp4\exp4\obj\Debug\exp4.csprojAssemblyReference.cache
+F:\.net course\course_code\exp4\exp4\obj\Debug\exp4.Form1.resources
+F:\.net course\course_code\exp4\exp4\obj\Debug\exp4.Properties.Resources.resources
+F:\.net course\course_code\exp4\exp4\obj\Debug\exp4.csproj.GenerateResource.cache
+F:\.net course\course_code\exp4\exp4\obj\Debug\exp4.csproj.CoreCompileInputs.cache
+F:\.net course\course_code\exp4\exp4\obj\Debug\exp4.exe
+F:\.net course\course_code\exp4\exp4\obj\Debug\exp4.pdb
+C:\Users\zhang\Desktop\exp4\exp4\bin\Debug\exp4.exe.config
+C:\Users\zhang\Desktop\exp4\exp4\bin\Debug\exp4.exe
+C:\Users\zhang\Desktop\exp4\exp4\bin\Debug\exp4.pdb
+C:\Users\zhang\Desktop\exp4\exp4\obj\Debug\exp4.csprojAssemblyReference.cache
+C:\Users\zhang\Desktop\exp4\exp4\obj\Debug\hw4_1.Form1.resources
+C:\Users\zhang\Desktop\exp4\exp4\obj\Debug\exp4.Properties.Resources.resources
+C:\Users\zhang\Desktop\exp4\exp4\obj\Debug\exp4.csproj.GenerateResource.cache
+C:\Users\zhang\Desktop\exp4\exp4\obj\Debug\exp4.csproj.CoreCompileInputs.cache
+C:\Users\zhang\Desktop\exp4\exp4\obj\Debug\exp4.exe
+C:\Users\zhang\Desktop\exp4\exp4\obj\Debug\exp4.pdb
