@@ -1,0 +1,7 @@
+F:\.net course\course_code\exp5\exp5\bin\Debug\exp5.exe.config
+F:\.net course\course_code\exp5\exp5\bin\Debug\exp5.exe
+F:\.net course\course_code\exp5\exp5\bin\Debug\exp5.pdb
+F:\.net course\course_code\exp5\exp5\obj\Debug\exp5.csprojAssemblyReference.cache
+F:\.net course\course_code\exp5\exp5\obj\Debug\exp5.csproj.CoreCompileInputs.cache
+F:\.net course\course_code\exp5\exp5\obj\Debug\exp5.exe
+F:\.net course\course_code\exp5\exp5\obj\Debug\exp5.pdb

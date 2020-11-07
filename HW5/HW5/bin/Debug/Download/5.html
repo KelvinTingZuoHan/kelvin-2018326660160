@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="origin" />
+    <meta name="description" content="1、tf.nn.dynamic_rnn()函数 参考：http://www.360doc.com/content/17/0321/10/10408243_638692495.shtml 参考：http" />
+    <meta property="og:description" content="1、tf.nn.dynamic_rnn()函数 参考：http://www.360doc.com/content/17/0321/10/10408243_638692495.shtml 参考：http" />
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>循环神经网络（LSTM和GRU）(2) - 小丑_jk - 博客园</title>
+    <link id="favicon" rel="shortcut icon" href="//common.cnblogs.com/favicon.svg" type="image/svg+xml" />
+    
+    <link rel="stylesheet" href="/css/blog-common.min.css?v=WWIukVRKd_9oNM5WDgpTM9pDw7D0MhGFFz2HCnaFMII" />
+    <link id="MainCss" rel="stylesheet" href="/skins/lessismoreright/bundle-lessismoreright.min.css?v=e3rAXY6I74pStM77vahCXGbX594jbzmAR7_FvGIsWlQ" />
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/skins/lessismoreright/bundle-lessismoreright-mobile.min.css?v=vYMDpdm5Y5Vif1DJ2cDXnPc7ldXlb8hJHvalgK08PLE" />
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/xiaochouk/rss" />
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/xiaochouk/rsd.xml" />
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/xiaochouk/wlwmanifest.xml" />
+    <script>
+        var currentBlogId = 396807;
+        var currentBlogApp = 'xiaochouk';
+        var cb_enable_mathjax = false;
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'LessIsMoreRight';
+        var visitorUserId = '';
+    </script>
+        <script>
+            var currentPostDateAdded = '2018-04-08 05:36';
+        </script>
+    <script src="https://common.cnblogs.com/scripts/jquery-2.2.0.min.js"></script>
+    <script src="/js/blog-common.min.js?v=Rl4AGPYQiYM_G04eeyD7j1ApU6lPTlKLJmzUYVYLorE"></script>
+    
+    
+    
+</head>
+<body class="has-navbar">
+    <a name="top"></a>
+    <div id="bannerbar" class="formobile">
+        <a href="https://brands.cnblogs.com/aws/free?source=mobile-banner" target="_blank" onclick="ga('send', 'event', 'Link', 'click', 'aws-mobile-bannerbar')"><img src="https://img2020.cnblogs.com/blog/35695/202011/35695-20201104135303888-13496776.png" alt=""/></a>
+    </div>
+    <div id="top_nav" class="navbar">
+        <nav id="nav_main" class="navbar-main">
+            <ul id="nav_left" class="navbar-list navbar-left">
+                <li class="navbar-branding"><a href="https://www.cnblogs.com/" title="开发者的网上家园"><img src="/images/logo.svg?v=R9M0WmLAIPVydmdzE2keuvnjl-bPR7_35oHqtiBzGsM" alt="博客园Logo" /></a></li>
+                <li><a href="/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-sitehome')">首页</a></li>
+                <li><a href="https://news.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-news')">新闻</a></li>
+                <li><a href="https://q.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-q')">博问</a></li>
+                <li><a id="nav_brandzone" href="https://brands.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-brands')">专区</a></li>
+                <li><a href="https://ing.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-ing')">闪存</a></li>
+                <li><a href="https://brands.cnblogs.com/aws/free" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-aws')">云上钜惠</a></li>
+            </ul>
+            <ul id="nav_right" class="navbar-list navbar-right">
+                <li>
+                    <form id="zzk_search" class="navbar-search" action="https://zzk.cnblogs.com/s" method="get">
+                        <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="text" tabindex="3" />
+                        <button type="submit" id="zzk_search_button">
+                            <img src="/images/aggsite/search.svg" alt="搜索" />
+                        </button>
+                    </form>
+                </li>
+                <li id="navbar_login_status" class="navbar-list">
+                    <a id="navblog-myblog-icon" class="navbar-user-info navbar-blog" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx" alt="我的博客" title="我的博客">
+                        <img id="myblog_icon" class="navbar-icon" src="/images/aggsite/myblog.svg" alt="我的博客" />
+                    </a>
+                    <a class="navbar-user-info navbar-message navbar-icon-wrapper" href="https://msg.cnblogs.com/" alt="短消息" title="短消息">
+                        <img id="msg_icon" class="navbar-icon" src="/images/aggsite/message.svg?v=oS4PkibyMjZ9rGD5XAcLt99uW_s76Javy2up4dbnZNY" alt="短消息" />
+                        <span id="msg_count" style="display: none"></span>
+                    </a>
+                    <div id="user_info" class="navbar-user-info dropdown">
+                        <a class="dropdown-button" href="https://home.cnblogs.com/">
+                            <img id="user_icon" class="navbar-avatar" src="/images/aggsite/avatar-default.svg" alt="用户头像" />
+                        </a>
+                        <div class="dropdown-menu">
+                            <a id="navblog-myblog-text" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx">我的博客</a>
+                            <a href="https://home.cnblogs.com/">我的园子</a>
+                            <a href="https://account.cnblogs.com/settings/account">账号设置</a>
+                            <a href="javascript:void(0)" onclick="logout();">退出登录</a>
+                        </div>
+                    </div>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signup/">注册</a>
+                    <a class="navbar-anonymous" href="javascript:void(0);" onclick="login()">登录</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    
+    <div id="home">
+    <div id="header">
+        <div id="blogTitle">
+            
+<div class="title"><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/xiaochouk/">小丑_jk</a>
+</div>
+<div class="subtitle">
+
+</div>
+
+        </div>
+        <div id="navigator">
+            
+<ul id="navList">
+    <li id="nav_sitehome"><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+    <li id="nav_myhome">
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/xiaochouk/">
+首页</a>
+</li>
+    <li id="nav_newpost">
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+</li>
+    <li id="nav_contact">
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/%E5%B0%8F%E4%B8%91_jk">
+联系</a></li>
+    <li id="nav_rss">
+<a id="blog_nav_rss" class="menu" href="javascript:void(0)" data-rss="https://www.cnblogs.com/xiaochouk/rss/">
+订阅</a></li>
+    <li id="nav_admin">
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+</ul>
+
+            <div class="blogStats">
+                
+<span id="stats_post_count">随笔 - 
+89&nbsp;</span>
+<span id="stats_article_count">文章 - 
+0&nbsp;</span>
+<!-- <span id="stats-comment_count"></span> -->
+<span id="stats_comment_count">评论 - 
+2</span>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <div id="mainContent">
+            <div class="forFlow">
+                <div id="post_detail">
+    <div id="topics">
+        <div class="post">
+            <h1 class="postTitle">
+                
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/xiaochouk/p/8746302.html">
+    <span>循环神经网络（LSTM和GRU）(2)</span>
+    
+
+
+</a>
+
+            </h1>
+            <div class="clear"></div>
+            <div class="postBody">
+                
+<div id="cnblogs_post_body" class="blogpost-body">
+    <p><span style="color: rgba(255, 0, 0, 1)"><strong>1、tf.nn.dynamic_rnn()函数</strong></span></p>
+<p>参考：http://www.360doc.com/content/17/0321/10/10408243_638692495.shtml</p>
+<p>参考：https://blog.csdn.net/u010089444/article/details/60963053</p>
+<p>参考：https://blog.csdn.net/u010223750/article/details/71079036</p>
+<p>在用rnn处理长文本时，使用dynamic_rnn()可以跳过padding部分的计算，从而减少计算量。假设有两个文本，一个为10，一个为5，那么需要对第二文本进行0-padding填充，得到shape维度[2,10,dim]，其中dim为词向量的维度，</p>
+<p>使用dynamic_run的代码如下：</p>
+<div class="cnblogs_code">
+<pre>outputs,last_states=tf.nn.dynamic_rnn(cell=cell,dtype=tf.float32,sequence_length=x_lengths,inputs=x)</pre>
+</div>
+<p>其中cell为RNN节点，比如tf.contrib.rnn.BasicLSTMCell，x是0-padding之后的数据，x_lengths是每个文本的长度。</p>
+<p>tf.nn.dynamic_rnn()返回两个变量，第一个是每个step的输出值，以上面的例子为例，得到的维度则为：[2,10,dim]，第二个是最终的状态，是由(c,h)组成的tuple，均为[batch,dim]，其中dynamic有个参数sequence_length，用来指定每个example的长度，</p>
+<p>以如下为例：</p>
+<div class="cnblogs_code">
+<pre><span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> tensorflow as tf
+</span><span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> numpy as np
+</span><span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> 创建输入数据</span>
+X = np.random.randn(2, 10, 8<span style="color: rgba(0, 0, 0, 1)">)     <span style="color: rgba(0, 128, 0, 1)">  #其中2为batch_size，10为文本最大长度，8为embedding_size
+</span></span><span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> 第二个example长度为6   #randn从标准正态分布返回值，rand从[0,1)返回值</span>
+X[1,6:] =<span style="color: rgba(0, 0, 0, 1)"> 0
+X_lengths </span>= [10, 6<span style="color: rgba(0, 0, 0, 1)">]
+with tf.variable_scope(</span><span style="color: rgba(128, 0, 0, 1)">'</span><span style="color: rgba(128, 0, 0, 1)">c</span><span style="color: rgba(128, 0, 0, 1)">'</span>, reuse=<span style="color: rgba(0, 0, 0, 1)">None) as scope:         <span style="color: rgba(0, 128, 0, 1)"> #根据调用是否首次来调整reuse为True或False</span>
+    cell </span>= tf.contrib.rnn.BasicLSTMCell(num_units=64, state_is_tuple=<span style="color: rgba(0, 0, 0, 1)">True)   <span style="color: rgba(0, 128, 0, 1)"> #num_units指的是一个cell中神经元的个数</span>
+<span style="color: rgba(0, 128, 0, 1)">#循环层的cell数目表示：<span class="hljs-attribute">X_split =<span class="hljs-string"> tf.split(XR, time_step_size, 0)  (X_split中划分出来的arrays数量为循环层的cell个数)<br></span></span></span><span style="color: rgba(0, 128, 0, 1)">#在任意时刻，LSTM cell会产生两个内部状态c和h，当state_is_tuple=True时，该状态的c和h是分开记录的，放在一个二元tuple返回，维度均为[batch,embedding_size]；如果state_is_tuple=False时，两个状态就按列连接起来返回，</span><br>    outputs, last_states </span>=<span style="color: rgba(0, 0, 0, 1)"> tf.nn.dynamic_rnn(            <span style="color: rgba(0, 0, 255, 1)"> #outputs返回的维度是[2,10,8]，last_states返回的维度是[2,64]</span>
+            cell</span>=<span style="color: rgba(0, 0, 0, 1)">cell,                    <strong><span style="color: rgba(255, 0, 0, 1)">#tf.nn.dynamic_rnn用于实现不同迭代传入的batch可以是长度不同的数据，但是同一次迭代一个batch内部所有的数据长度仍然是固定的。也即第一次传入为[batch_size,10]，第二次[batch_size，8]，第三次[batch_size,11]</span></strong>
+            dtype</span>=<span style="color: rgba(0, 0, 0, 1)">tf.float64,               <strong><span style="color: rgba(255, 0, 0, 1)"> #然而对于rnn来说，每次输入的则是最大长度，也即[batch_size，max_seq]</span></strong>
+            sequence_length</span>=<span style="color: rgba(0, 0, 0, 1)">X_lengths,       <strong><span style="color: rgba(255, 0, 0, 1)">#假若设置第二个example的有效长度为6，当传入这个参数时，tensorflow对6之后的padding就不计算了，其last_states将重复第6步的计算到末尾，而outputs中超过6步的结果会被置零。</span></strong>
+            inputs</span>=<span style="color: rgba(0, 0, 0, 1)">X)
+    result </span>=<span style="color: rgba(0, 0, 0, 1)"> tf.contrib.learn.run_n(
+            {</span><span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(128, 0, 0, 1)">outputs</span><span style="color: rgba(128, 0, 0, 1)">"</span>: outputs, <span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(128, 0, 0, 1)">last_states</span><span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(0, 0, 0, 1)">: last_states},      
+            n</span>=1<span style="color: rgba(0, 0, 0, 1)">,
+            feed_dict</span>=<span style="color: rgba(0, 0, 0, 1)">None)
+    </span><span style="color: rgba(0, 0, 255, 1)">print</span> (result[0])<br>assert result[<span class="hljs-link_label">0][<span class="hljs-link_reference">"outputs"].shape == (2, 10, 64)       <span class="hljs-header"><span style="color: rgba(0, 128, 0, 1)"># 第二个example中的outputs超过6步(7-10步)的值应该为0</span> <br>assert (result[<span class="hljs-link_label">0][<span class="hljs-link_reference">"outputs"][<span class="hljs-link_label">1,7,:] == np.zeros(cell.output_size)).all()</span></span></span></span></span></span></pre>
+</div>
+<p><span style="color: rgba(255, 0, 0, 1)"><strong>&nbsp;2、tf.contrib.rnn.BasicLSTMCell()函数和tf.contrib.rnn.BasicRNNCell()函数</strong></span></p>
+<p><span style="color: rgba(0, 0, 0, 1)">参考：https://blog.csdn.net/u013082989/article/details/73693392</span></p>
+<p><span style="color: rgba(0, 0, 0, 1)">参考：https://blog.csdn.net/u010089444/article/details/60963053</span></p>
+<p><span style="color: rgba(0, 0, 0, 1)"><span style="color: rgba(255, 0, 0, 1)">BasicRNNCell</span>是最基本的RNN cell单元，输入参数包括：</span></p>
+<p><span style="color: rgba(0, 0, 0, 1)">num_units：RNN层神经元的个数</span></p>
+<p><span style="color: rgba(0, 0, 0, 1)">activation：内部状态间的激活函数</span></p>
+<p><span style="color: rgba(0, 0, 0, 1)">reuse：决定是否重用现有域的变量</span></p>
+<p><span style="color: rgba(0, 0, 0, 1)"><span style="color: rgba(255, 0, 0, 1)">BasicLSTMCell</span>是最基本的LSTM循环神经网络单元，输入参数包括：</span></p>
+<p><span style="color: rgba(0, 0, 0, 1)">num_units：LSTM cell层中的单元数</span></p>
+<p><span style="color: rgba(0, 0, 0, 1)">forget_bias：forget gates中的偏置</span></p>
+<p><span style="color: rgba(0, 0, 0, 1)">state_is_tuple：返回(c_state，m_state)二元组</span></p>
+<p><span style="color: rgba(0, 0, 0, 1)">activation：状态间转移的激活函数</span></p>
+<p><span style="color: rgba(0, 0, 0, 1)">reuse：是否重用变量</span></p>
+<p>&nbsp;<strong>以MNIST手写体数据集为例：</strong></p>
+<div class="cnblogs_code">
+<pre><span style="color: rgba(0, 0, 255, 1)">from</span> tensorflow.examples.tutorials.mnist <span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> input_data
+</span><span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> tensorflow as tf
+</span><span style="color: rgba(0, 0, 255, 1)">from</span> tensorflow.contrib <span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> rnn
+</span><span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> numpy as np
+input_vec_size </span>= lstm_size = 28 <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> 输入向量的维度</span>
+time_step_size = 28 <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> 循环层长度</span><span style="color: rgba(0, 0, 0, 1)">
+batch_size </span>= 128<span style="color: rgba(0, 0, 0, 1)">
+test_size </span>= 256
+<span style="color: rgba(0, 0, 255, 1)">def</span><span style="color: rgba(0, 0, 0, 1)"> init_weights(shape):
+    </span><span style="color: rgba(0, 0, 255, 1)">return</span> tf.Variable(tf.random_normal(shape, stddev=0.01<span style="color: rgba(0, 0, 0, 1)">))
+</span><span style="color: rgba(0, 0, 255, 1)">def</span><span style="color: rgba(0, 0, 0, 1)"> model(X, W, B, lstm_size):
+    </span><span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> X, input shape: (batch_size, time_step_size, input_vec_size)</span>
+    <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> XT shape: (time_step_size, batch_size, input_vec_size)</span>
+    XT = tf.transpose(X, [1, 0, 2])  <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> permute time_step_size and batch_size,[28, 128, 28]</span>
+    <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> XR shape: (time_step_size * batch_size, input_vec_size)</span>
+    XR = tf.reshape(XT, [-1, lstm_size]) <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> each row has input for each lstm cell (lstm_size=input_vec_size)</span>
+    <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> Each array shape: (batch_size, input_vec_size)</span>
+    X_split = tf.split(XR, time_step_size, 0) <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> split them to time_step_size (28 arrays),shape = [(128, 28),(128, 28)...]</span>
+    <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> Make lstm with lstm_size (each input vector size). num_units=lstm_size; forget_bias=1.0</span>
+    lstm = rnn.BasicLSTMCell(lstm_size, forget_bias=1.0, state_is_tuple=<span style="color: rgba(0, 0, 0, 1)">True)
+    </span><span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> Get lstm cell output, time_step_size (28) arrays with lstm_size output: (batch_size, lstm_size)</span>
+    <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> rnn..static_rnn()的输出对应于每一个timestep，如果只关心最后一步的输出，取outputs[-1]即可</span>
+    outputs, _states = rnn.static_rnn(lstm, X_split, dtype=tf.float32)  <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> 时间序列上每个Cell的输出:[... shape=(128, 28)..]</span>
+    <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> Linear activation</span>
+    <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> Get the last output</span>
+    <span style="color: rgba(0, 0, 255, 1)">return</span> tf.matmul(outputs[-1], W) + B, lstm.state_size <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> State size to initialize the stat</span>
+mnist = input_data.read_data_sets(<span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(128, 0, 0, 1)">MNIST_data/</span><span style="color: rgba(128, 0, 0, 1)">"</span>, one_hot=<span style="color: rgba(0, 0, 0, 1)">True)
+trX, trY, teX, teY </span>=<span style="color: rgba(0, 0, 0, 1)"> mnist.train.images, mnist.train.labels, mnist.test.images, mnist.test.labels
+</span><span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> 将每张图用一个28x28的矩阵表示,(55000,28,28,1)</span>
+trX = trX.reshape(-1, 28, 28<span style="color: rgba(0, 0, 0, 1)">) 
+teX </span>= teX.reshape(-1, 28, 28<span style="color: rgba(0, 0, 0, 1)">) 
+X </span>= tf.placeholder(<span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(128, 0, 0, 1)">float</span><span style="color: rgba(128, 0, 0, 1)">"</span>, [None, 28, 28<span style="color: rgba(0, 0, 0, 1)">])
+Y </span>= tf.placeholder(<span style="color: rgba(128, 0, 0, 1)">"</span><span style="color: rgba(128, 0, 0, 1)">float</span><span style="color: rgba(128, 0, 0, 1)">"</span>, [None, 10<span style="color: rgba(0, 0, 0, 1)">])
+</span><span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> get lstm_size and output 10 labels</span>
+W = init_weights([lstm_size, 10])  <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> 输出层权重矩阵28×10</span>
+B = init_weights([10])  <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> 输出层bais</span><span style="color: rgba(0, 0, 0, 1)">
+py_x, state_size </span>=<span style="color: rgba(0, 0, 0, 1)"> model(X, W, B, lstm_size)
+cost </span>= tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=py_x, labels=<span style="color: rgba(0, 0, 0, 1)">Y))
+train_op </span>= tf.train.RMSPropOptimizer(0.001, 0.9<span style="color: rgba(0, 0, 0, 1)">).minimize(cost)
+predict_op </span>= tf.argmax(py_x, 1<span style="color: rgba(0, 0, 0, 1)">)
+session_conf </span>=<span style="color: rgba(0, 0, 0, 1)"> tf.ConfigProto()
+session_conf.gpu_options.allow_growth </span>=<span style="color: rgba(0, 0, 0, 1)"> True
+</span><span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> Launch the graph in a session</span>
+with tf.Session(config=<span style="color: rgba(0, 0, 0, 1)">session_conf) as sess:
+    </span><span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> you need to initialize all variables</span>
+<span style="color: rgba(0, 0, 0, 1)">    tf.global_variables_initializer().run()
+    </span><span style="color: rgba(0, 0, 255, 1)">for</span> i <span style="color: rgba(0, 0, 255, 1)">in</span> range(100<span style="color: rgba(0, 0, 0, 1)">):
+        </span><span style="color: rgba(0, 0, 255, 1)">for</span> start, end <span style="color: rgba(0, 0, 255, 1)">in</span> zip(range(0, len(trX), batch_size), range(batch_size, len(trX)+1<span style="color: rgba(0, 0, 0, 1)">, batch_size)):
+            sess.run(train_op, feed_dict</span>=<span style="color: rgba(0, 0, 0, 1)">{X: trX[start:end], Y: trY[start:end]})
+        test_indices </span>= np.arange(len(teX))  <span style="color: rgba(0, 128, 0, 1)">#</span><span style="color: rgba(0, 128, 0, 1)"> Get A Test Batch</span>
+<span style="color: rgba(0, 0, 0, 1)">        np.random.shuffle(test_indices)
+        test_indices </span>=<span style="color: rgba(0, 0, 0, 1)"> test_indices[0:test_size]
+        </span><span style="color: rgba(0, 0, 255, 1)">print</span>(i, np.mean(np.argmax(teY[test_indices], axis=1) ==<span style="color: rgba(0, 0, 0, 1)">
+                         sess.run(predict_op, feed_dict</span>={X: teX[test_indices]})))</pre>
+</div>
+<p>&nbsp;</p>
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+    <div id="blog_post_info"></div>
+    <div class="clear"></div>
+    <div id="post_next_prev"></div>
+</div>
+            </div>
+            <div class="postDesc">posted @ 
+<span id="post-date">2018-04-08 17:36</span>&nbsp;
+<a href="https://www.cnblogs.com/xiaochouk/">小丑_jk</a>&nbsp;
+阅读(<span id="post_view_count">455</span>)&nbsp;
+评论(<span id="post_comment_count">0</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=8746302" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(8746302);return false;">收藏</a></div>
+        </div>
+        <script src="https://common.cnblogs.com/highlight/10.3.1/highlight.min.js"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 396807, cb_blogApp = 'xiaochouk', cb_blogUserGuid = 'c47e7397-68de-41ba-2a5f-08d52fc34315';
+    var cb_entryId = 8746302, cb_entryCreatedDate = '2018-04-08 17:36', cb_postType = 1;
+    updatePostStats(
+        [cb_entryId],
+        function(id, count) { $("#post_view_count").text(count) },
+        function(id, count) { $("#post_comment_count").text(count) })
+</script>
+        <a name="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+    <div id="comment_form_container"></div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id='div-gpt-ad-1592365906576-0' style='width: 300px; height: 250px;'></div>
+    </div>
+    <div id="under_post_news"></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id='div-gpt-ad-1592366332455-0' style='width: 468px; height: 60px;'></div>
+    </div>
+    <div id="under_post_kb"></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+       var commentManager = new blogCommentManager();
+       commentManager.renderComments(0);
+       fixPostBody();
+       deliverBigBanner();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);       deliverT2();
+       deliverC1C2();
+       loadNewsAndKb();
+       loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);       LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+       GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+       loadOptUnderPost();
+       GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+   </script>
+</div>
+
+    </div>
+</div>
+            </div>
+        </div>
+
+        <div id="sideBar">
+            <div id="sideBarMain">
+                <div id="sidebar_news" class="newsItem">
+            <script>loadBlogNews();</script>
+</div>
+<div id="sidebar_ad"></div>
+                <div id="calendar"><div id="blog-calendar" style="display:none"></div></div>                
+                <script>loadBlogDefaultCalendar();</script>
+                <div id="leftcontentcontainer">
+                    <!-- begin:SingleColumn -->
+                    <div id="blog-sidecolumn"></div>
+                    <script>loadBlogSideColumn();</script>
+                    <!-- end:  SingleColumn -->
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div id="footer">
+        <!--done-->
+Copyright &copy; 2020 小丑_jk
+<br /><span id="poweredby">Powered by .NET 5.0.0-rc.2.20475.5 on Kubernetes</span>
+
+    </div>
+</div>
+
+    
+</body>
+</html>

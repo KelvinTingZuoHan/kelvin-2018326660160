@@ -1,0 +1,385 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="never" />
+    <meta name="description" content="长话短说：上文我们讲了 ASP.NET Core 基于声明的访问控制到底是什么鬼？ 今天我们乘胜追击：聊一聊ASP.NET Core 中的身份验证。 身份验证是确定用户身份的过程。 授权是确定用户是否" />
+    <meta property="og:description" content="长话短说：上文我们讲了 ASP.NET Core 基于声明的访问控制到底是什么鬼？ 今天我们乘胜追击：聊一聊ASP.NET Core 中的身份验证。 身份验证是确定用户身份的过程。 授权是确定用户是否" />
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>深入解读 ASP.NET Core 身份认证过程 - 有态度的小码甲 - 开发者的网上家园</title>
+    <link id="favicon" rel="shortcut icon" href="//common.cnblogs.com/favicon.svg" type="image/svg+xml" />
+    
+    <link rel="stylesheet" href="/css/blog-common.min.css?v=dktCmaTYc_s0a4EnvC6tuH5wYElIJN_131iOybZOKro" />
+    <link id="MainCss" rel="stylesheet" href="/skins/darkgreentrip/bundle-darkgreentrip.min.css?v=KCO_3ott2y-JO7odohKsrvtUrt9hTa27jdu0wc97cYk" />
+    <link type="text/css" rel="stylesheet" href="https://www.cnblogs.com/JulianHuang/custom.css?v=HRPBO17xRiovYxc0vnaNZkRTTvI=" />
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/skins/darkgreentrip/bundle-darkgreentrip-mobile.min.css?v=tIFvQMy1scIQlz-FPuB-X5CclTNQuHEVChVECOD3yaY" />
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/JulianHuang/rss" />
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/JulianHuang/rsd.xml" />
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/JulianHuang/wlwmanifest.xml" />
+    <script>
+        var currentBlogId = 232636;
+        var currentBlogApp = 'JulianHuang';
+        var cb_enable_mathjax = true;
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'darkgreentrip';
+        var visitorUserId = '';
+    </script>
+        <script>
+            var currentPostDateAdded = '2020-10-04 09:32';
+        </script>
+    <script src="https://common.cnblogs.com/scripts/jquery-2.2.0.min.js"></script>
+    <script src="/js/blog-common.min.js?v=quLP6V96NCUwrp9e9p4Tc3ZzspjwpbJyGVOAQHoms5M"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']], processClass: 'math', processEscapes: true },
+        TeX: {
+        equationNumbers: { autoNumber: ['AMS'], useLabelIds: true },
+        extensions: ['extpfeil.js', 'mediawiki-texvc.js'],
+        Macros: {bm: "\\boldsymbol"}
+        },
+        'HTML-CSS': { linebreaks: { automatic: true } },
+        SVG: { linebreaks: { automatic: true } }
+        });
+    </script>
+    <script src="https://mathjax.cnblogs.com/2_7_5/MathJax.js?config=TeX-AMS-MML_HTMLorMML&amp;v=20200504"></script>
+    
+</head>
+<body>
+    <a name="top"></a>
+    <div id="top_nav" class="navbar navbar-custom">
+        <nav id="nav_main" class="navbar-main">
+            <ul id="nav_left" class="navbar-list navbar-left">
+                <li class="navbar-branding">
+                    <a href="https://www.cnblogs.com/" title="开发者的网上家园"><img src="/images/logo.svg?v=R9M0WmLAIPVydmdzE2keuvnjl-bPR7_35oHqtiBzGsM" alt="博客园Logo" /></a>
+                </li>
+                <li><a href="/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-sitehome')">首页</a></li>
+                <li><a href="https://news.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-news')">新闻</a></li>
+                <li><a href="https://q.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-q')">博问</a></li>
+                <li><a id="nav_brandzone" href="https://brands.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-brands')">专区</a></li>
+                <li><a href="https://ing.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-ing')">闪存</a></li>
+                <li><a href="https://edu.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-edu')">班级</a></li>
+            </ul>
+            <ul id="nav_right" class="navbar-list navbar-right">
+                <li>
+                    <form id="zzk_search" class="navbar-search" action="https://zzk.cnblogs.com/s" method="get">
+                        <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="text" tabindex="3" />
+                        <button type="submit" id="zzk_search_button">
+                            <img src="/images/aggsite/search.svg" alt="搜索" />
+                        </button>
+                    </form>
+                </li>
+                <li id="navbar_login_status" class="navbar-list">
+                    <a id="navblog-myblog-icon" class="navbar-user-info navbar-blog" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx" alt="我的博客" title="我的博客">
+                        <img id="myblog_icon" class="navbar-icon" src="/images/aggsite/myblog.svg" alt="我的博客" />
+                    </a>
+                    <a class="navbar-user-info navbar-message navbar-icon-wrapper" href="https://msg.cnblogs.com/" alt="短消息" title="短消息">
+                        <img id="msg_icon" class="navbar-icon" src="/images/aggsite/message.svg?v=oS4PkibyMjZ9rGD5XAcLt99uW_s76Javy2up4dbnZNY" alt="短消息" />
+                        <span id="msg_count" style="display: none"></span>
+                    </a>
+                    <div id="user_info" class="navbar-user-info dropdown">
+                        <a class="dropdown-button" href="https://home.cnblogs.com/">
+                            <img id="user_icon" class="navbar-avatar" src="/images/aggsite/avatar-default.svg" alt="用户头像" />
+                        </a>
+                        <div class="dropdown-menu">
+                            <a id="navblog-myblog-text" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx">我的博客</a>
+                            <a href="https://home.cnblogs.com/">我的园子</a>
+                            <a href="https://account.cnblogs.com/settings/account">账号设置</a>
+                            <a href="javascript:void(0)" onclick="logout();">退出登录</a>
+                        </div>
+                    </div>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signup/">注册</a>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signin/?returnUrl=https://www.cnblogs.com/">登录</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    
+    
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+        <a id="lnkBlogLogo" href="https://www.cnblogs.com/JulianHuang/"><img id="blogLogo" src="/skins/custom/images/logo.gif" alt="返回主页" /></a>		
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/JulianHuang/">一线码农错题本</a>
+</h1>
+<h2>
+知其然更知其所以然，不做眼高手低的【高手】
+</h2>
+
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+<li>
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/JulianHuang/">
+首页</a>
+</li>
+<li>
+
+
+</li>
+<li>
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/%E6%9C%89%E6%80%81%E5%BA%A6%E7%9A%84%E5%B0%8F%E7%A0%81%E7%94%B2">
+联系</a></li>
+<li>
+
+<!--<partial name="./Shared/_XmlLink.cshtml" model="Model" /></li>--></li>
+<li>
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+</ul>
+
+
+		<div class="blogStats">
+			
+			<span id="stats_post_count">随笔 - 
+85&nbsp; </span>
+<span id="stats_article_count">文章 - 
+0&nbsp; </span>
+<span id="stats-comment_count">评论 - 
+273</span>
+
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="post_detail">
+    <!--done-->
+    <div id="topics">
+        <div class="post">
+            <h1 class = "postTitle">
+                
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/JulianHuang/p/13766100.html">
+    <span>深入解读 ASP.NET Core 身份认证过程</span>
+    
+
+
+</a>
+
+            </h1>
+            <div class="clear"></div>
+            <div class="postBody">
+                
+<div id="cnblogs_post_body" class="blogpost-body cnblogs-markdown">
+    <p>长话短说：上文我们讲了 ASP.NET Core 基于声明的访问控制到底是什么鬼？<br>
+今天我们乘胜追击：聊一聊ASP.NET Core 中的身份验证。</p>
+<blockquote>
+<p>身份验证是确定用户身份的过程。 授权是确定用户是否有权访问资源的过程。</p>
+</blockquote>
+<h3 id="1-万变不离其宗">1. 万变不离其宗</h3>
+<p>显而易见，一个常规的身份认证用例包括两部分：<br>
+① 对用户进行身份验证<br>
+② 在未经身份验证的用户试图访问受限资源时作出反应</p>
+<p>已注册的身份验证处理程序及其配置选项被称为“方案”，方案可用作一种机制，供用户参考相关处理程序的身份验证、挑战和禁止行为。</p>
+<blockquote>
+<p>我们口头上常说的：<br>
+基于cookie认证方案，若认证成功，go on，若认证失败则跳转回登录页面；<br>
+基于基本身份认证（BA）方案，若认证成功，go on，若认证失败则给浏览器返回<code>WWW-Authenticate</code>标头， 浏览器会再次弹出认证窗口。</p>
+</blockquote>
+<h3 id="2-aspnet-core认证原理">2. ASP.NET Core认证原理</h3>
+<p>在 ASP.NET Core 中，身份验证由<code>IAuthenticationService</code>负责，身份验证服务会调用已注册的身份验证处理程序来完成与身份验证相关的操作， 整个验证过程由<code>认证中间件</code>来串联。</p>
+<p>一图以蔽之：<br>
+<img src="https://imgkr2.cn-bj.ufileos.com/c99ce9c3-22f9-43da-958a-92c281838c02.png?UCloudPublicKey=TOKEN_8d8b72be-579a-4e83-bfd0-5f6ce1546f13&amp;Signature=7tOjcM%252B2V8NpeVRkXw1g4De8VcU%253D&amp;Expires=1601817858" alt="" loading="lazy"></p>
+<p>其中有几个关键步骤</p>
+<ol>
+<li>
+<p>认证处理程序<br>
+可结合方案Scheme中的配置项<code>AuthenticationSchemeOptions</code>编写认证处理程序。</p>
+<p>基于Cookie的认证方案可在Options项中可指定登录地址，<br>
+基于基本身份的认证方案可在Options项中指定用户名/密码;</p>
+</li>
+<li>
+<p>身份认证程序继承自<code>AuthenticationHandler类</code>或<code>IAuthenticationHandler接口</code>。<br>
+<img src="https://imgkr2.cn-bj.ufileos.com/12b7d893-1c68-4626-ad62-f918576bcb7f.png?UCloudPublicKey=TOKEN_8d8b72be-579a-4e83-bfd0-5f6ce1546f13&amp;Signature=hf5u%252Bm9cWNkNCWJVWTgr5vaDp%252FQ%253D&amp;Expires=1601822570" alt="" loading="lazy"></p>
+</li>
+</ol>
+<ul>
+<li>
+<p>核心认证函数可落地基于声明的访问控制，生成绑定了ClaimsPrincipal、Scheme的<code>AuthenticationTicket对象</code>；  无论认证成功/失败，函数返回<code>AuthenticateResult对象</code>。</p>
+</li>
+<li>
+<p>挑战(对未认证的用户做出的反应)：   例如返回登录页面</p>
+</li>
+<li>
+<p>禁止(对已认证，但对特定资源无权访问做出的反应) ： 例如返回提示字符串</p>
+</li>
+</ul>
+<p>以上均为服务注册过程</p>
+<ol start="3">
+<li>收到请求，认证中间件使用<code>IAuthenticationService</code>对HttpContext按照要求的scheme进行认证， 实际内部会调用第2步编写的认证处理程序。<br>
+<img src="https://imgkr2.cn-bj.ufileos.com/333638e3-d5a6-4651-a43d-18ae2315f17a.png?UCloudPublicKey=TOKEN_8d8b72be-579a-4e83-bfd0-5f6ce1546f13&amp;Signature=xRvEYpXEQMYrE7tw0NwWE%252BIgq9s%253D&amp;Expires=1601822194" alt="" loading="lazy"></li>
+</ol>
+<p>以上认证原理，之前有一个近身实战： ASP.NET Core 实现基本身份验证。<br>
+源代码如下： <a href="https://www.cnblogs.com/JulianHuang/p/10345365.html">https://www.cnblogs.com/JulianHuang/p/10345365.html</a></p>
+<h3 id="3-aspnet-core获取当前用户">3. ASP.NET Core获取当前用户</h3>
+<blockquote>
+<p>基于声明的访问控制, 我们会在HttpContext.User属性存储身份信息。</p>
+</blockquote>
+<pre><code> var claims = new[] {
+               new Claim(ClaimTypes.NameIdentifier,username),
+               new Claim(ClaimTypes.Name,username),
+           };
+ var identity = new ClaimsIdentity(claims, Scheme.Name);
+ var principal = new ClaimsPrincipal(identity);
+ Context.User = principal;
+</code></pre>
+<p>Web应用程序中获取当前登录用户， 有两种代码场合：</p>
+<h5 id="31-在控制器中获取当前登录用户">3.1 在控制器中获取当前登录用户</h5>
+<p>控制器是处理请求的 一等公民，天生自带HttpContext。<br>
+直接通过ControllerBase基类中包含的HttpContext属性，获取User对象。</p>
+<blockquote>
+<p>实际上Razor Page、Razor View、Middleware均包含HttpContext属性/参数， 可直接使用。</p>
+</blockquote>
+<h5 id="32-在服务中获取当前登录用户">3.2 在服务中获取当前登录用户</h5>
+<p>这个时候，服务是作为请求处理中的一个环节，并没有直接可用的HttpContext。<br>
+ASP.NET Core 提供了<code>IHttpContextAccessor类</code>能够注入此次请求中的HttpContext对象（依赖注入框架的作用）。</p>
+<pre><code>//  下面的用户实体类，需要获取当前登录用户，借助IHttpContextAccessor注入httpContext
+public class UserEntityService : IUserEntityService
+{
+   private IHttpContextAccessor _accessor;
+   private readonly IMongoCollection&lt;UserProfile&gt; _users;
+
+   public UserEntityService(IHttpContextAccessor accessor, IDefaultMongoDatabaseProvider databaseProvider)
+   {
+       _accessor = accessor;
+       _users = databaseProvider.GetCollection&lt;UserProfile&gt;(CollectionNames.UserProfiles);
+   }
+
+   public Task&lt;UserProfile&gt; GetCurrentUserAsync()
+   {
+       var rawUser = this._accessor.HttpContext.User();
+       if (rawUser == null)
+       {
+          return null;
+       }
+       var filter = Builders&lt;UserProfile&gt;.Filter.Eq("UserId", rawUser.UserId);
+      return _users.Find(filter).FirstOrDefaultAsync();
+   }
+}
+</code></pre>
+<h4 id="-abp-vnext">+ abp vnext</h4>
+<p>我们不需要区分以上代码场合，在Controller或者Application 服务中使用<code>ICurrentUser</code>接口拿到登录用户。</p>
+<h3 id="旁白">旁白</h3>
+<p>个人认为，ASP.NET Core身份认证的源代码, 基于现实认知提炼而来，让我们惊叹于框架代码的的简洁精炼、层次分明。</p>
+<p>基于声明的访问控制已成标准，ASP.NET Core/abp vnext 均提供了完善的支持。</p>
+
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+    <div id="blog_post_info"></div>
+    <div class="clear"></div>
+    <div id="post_next_prev"></div>
+</div>
+            </div>
+            <div class="postDesc">posted @ 
+<span id="post-date">2020-10-04 21:32</span>&nbsp;
+<a href="https://www.cnblogs.com/JulianHuang/">有态度的小码甲</a>&nbsp;
+阅读(<span id="post_view_count">0</span>)&nbsp;
+评论(<span id="post_comment_count">0</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=13766100" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(13766100);return false;">收藏</a></div>
+        </div>
+	    
+	    
+    </div><!--end: topics 文章、评论容器-->
+</div>
+<script src="https://common.cnblogs.com/highlight/9.12.0/highlight.min.js"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 232636, cb_blogApp = 'JulianHuang', cb_blogUserGuid = 'c75ad4ff-965a-e311-8d02-90b11c0b17d6';
+    var cb_entryId = 13766100, cb_entryCreatedDate = '2020-10-04 21:32', cb_postType = 1;
+    loadViewCount(cb_entryId);
+</script><a name="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<script>
+    var commentManager = new blogCommentManager();
+    commentManager.renderComments(0);
+</script>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+    <div id="comment_form_container"></div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id='div-gpt-ad-1592365906576-0' style='width: 300px; height: 250px;'></div>
+    </div>
+    <div id="under_post_news"></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id='div-gpt-ad-1592366332455-0' style='width: 468px; height: 60px;'></div>
+    </div>
+    <div id="under_post_kb"></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+        fixPostBody();
+        deliverBigBanner();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);        deliverT2();
+        deliverC1C2();
+        loadNewsAndKb();
+        loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);        LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+        GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+        loadOptUnderPost();
+        GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    </script>
+</div>
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<div id="sidebar_news" class="newsItem">
+            <script>loadBlogNews();</script>
+</div>
+
+<div id="sidebar_ad"></div>
+			<div id="blog-calendar" style="display:none"></div><script>loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div>
+                    <script>loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		<!--done-->
+Copyright &copy; 2020 有态度的小码甲
+<br /><span id="poweredby">Powered by .NET Core on Kubernetes</span>
+
+
+
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+    
+</body>
+</html>

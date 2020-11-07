@@ -1,0 +1,20 @@
+F:\.net course\course_code\exp5\Crawler\bin\Debug\Crawler.exe.config
+F:\.net course\course_code\exp5\Crawler\bin\Debug\Crawler.exe
+F:\.net course\course_code\exp5\Crawler\bin\Debug\Crawler.pdb
+F:\.net course\course_code\exp5\Crawler\obj\Debug\Crawler.csprojAssemblyReference.cache
+F:\.net course\course_code\exp5\Crawler\obj\Debug\Crawler.Form1.resources
+F:\.net course\course_code\exp5\Crawler\obj\Debug\Crawler.Properties.Resources.resources
+F:\.net course\course_code\exp5\Crawler\obj\Debug\Crawler.csproj.GenerateResource.cache
+F:\.net course\course_code\exp5\Crawler\obj\Debug\Crawler.csproj.CoreCompileInputs.cache
+F:\.net course\course_code\exp5\Crawler\obj\Debug\Crawler.exe
+F:\.net course\course_code\exp5\Crawler\obj\Debug\Crawler.pdb
+C:\Users\zhang\Desktop\exp5\Crawler\bin\Debug\Crawler.exe.config
+C:\Users\zhang\Desktop\exp5\Crawler\bin\Debug\Crawler.exe
+C:\Users\zhang\Desktop\exp5\Crawler\bin\Debug\Crawler.pdb
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\Crawler.csprojAssemblyReference.cache
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\Crawler.Properties.Resources.resources
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\Crawler.csproj.GenerateResource.cache
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\Crawler.csproj.CoreCompileInputs.cache
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\Crawler.exe
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\Crawler.pdb
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\REPTILE.Form1.resources

@@ -1,0 +1,413 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="origin" />
+    <meta name="description" content="hi-nginx-java是一个独立于java官方的servlet规范，它有能力把NGINX直接编成servlet容器服务器。换言之，无需安装tomcat等容器服务器，也无需使用nginx的反向代理功" />
+    <meta property="og:description" content="hi-nginx-java是一个独立于java官方的servlet规范，它有能力把NGINX直接编成servlet容器服务器。换言之，无需安装tomcat等容器服务器，也无需使用nginx的反向代理功" />
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>作为servlet容器的hi-nginx-java - hi-nginx - 博客园</title>
+    <link id="favicon" rel="shortcut icon" href="//common.cnblogs.com/favicon.svg" type="image/svg+xml" />
+    
+    <link rel="stylesheet" href="/css/blog-common.min.css?v=WWIukVRKd_9oNM5WDgpTM9pDw7D0MhGFFz2HCnaFMII" />
+    <link id="MainCss" rel="stylesheet" href="/skins/classicblue/bundle-classicblue.min.css?v=GVa7XLoQ-BmrCtX-h-nB0gfS6B6kfyNpyGgXXWsx5TM" />
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/skins/classicblue/bundle-classicblue-mobile.min.css?v=2UilQYvTyvPFtPxoSXRBPZM_olrHS9jgCl0iyzH6B0I" />
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/hi-nginx/rss" />
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/hi-nginx/rsd.xml" />
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/hi-nginx/wlwmanifest.xml" />
+    <script>
+        var currentBlogId = 420944;
+        var currentBlogApp = 'hi-nginx';
+        var cb_enable_mathjax = false;
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'ClassicBlue';
+        var visitorUserId = '';
+    </script>
+        <script>
+            var currentPostDateAdded = '2020-11-07 09:13';
+        </script>
+    <script src="https://common.cnblogs.com/scripts/jquery-2.2.0.min.js"></script>
+    <script src="/js/blog-common.min.js?v=Rl4AGPYQiYM_G04eeyD7j1ApU6lPTlKLJmzUYVYLorE"></script>
+    
+    
+    
+</head>
+<body class="has-navbar">
+    <a name="top"></a>
+    <div id="bannerbar" class="formobile">
+        <a href="https://brands.cnblogs.com/aws/free?source=mobile-banner" target="_blank" onclick="ga('send', 'event', 'Link', 'click', 'aws-mobile-bannerbar')"><img src="https://img2020.cnblogs.com/blog/35695/202011/35695-20201104135303888-13496776.png" alt=""/></a>
+    </div>
+    <div id="top_nav" class="navbar">
+        <nav id="nav_main" class="navbar-main">
+            <ul id="nav_left" class="navbar-list navbar-left">
+                <li class="navbar-branding"><a href="https://www.cnblogs.com/" title="开发者的网上家园"><img src="/images/logo.svg?v=R9M0WmLAIPVydmdzE2keuvnjl-bPR7_35oHqtiBzGsM" alt="博客园Logo" /></a></li>
+                <li><a href="/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-sitehome')">首页</a></li>
+                <li><a href="https://news.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-news')">新闻</a></li>
+                <li><a href="https://q.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-q')">博问</a></li>
+                <li><a id="nav_brandzone" href="https://brands.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-brands')">专区</a></li>
+                <li><a href="https://ing.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-ing')">闪存</a></li>
+                <li><a href="https://brands.cnblogs.com/aws/free" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-aws')">云上钜惠</a></li>
+            </ul>
+            <ul id="nav_right" class="navbar-list navbar-right">
+                <li>
+                    <form id="zzk_search" class="navbar-search" action="https://zzk.cnblogs.com/s" method="get">
+                        <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="text" tabindex="3" />
+                        <button type="submit" id="zzk_search_button">
+                            <img src="/images/aggsite/search.svg" alt="搜索" />
+                        </button>
+                    </form>
+                </li>
+                <li id="navbar_login_status" class="navbar-list">
+                    <a id="navblog-myblog-icon" class="navbar-user-info navbar-blog" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx" alt="我的博客" title="我的博客">
+                        <img id="myblog_icon" class="navbar-icon" src="/images/aggsite/myblog.svg" alt="我的博客" />
+                    </a>
+                    <a class="navbar-user-info navbar-message navbar-icon-wrapper" href="https://msg.cnblogs.com/" alt="短消息" title="短消息">
+                        <img id="msg_icon" class="navbar-icon" src="/images/aggsite/message.svg?v=oS4PkibyMjZ9rGD5XAcLt99uW_s76Javy2up4dbnZNY" alt="短消息" />
+                        <span id="msg_count" style="display: none"></span>
+                    </a>
+                    <div id="user_info" class="navbar-user-info dropdown">
+                        <a class="dropdown-button" href="https://home.cnblogs.com/">
+                            <img id="user_icon" class="navbar-avatar" src="/images/aggsite/avatar-default.svg" alt="用户头像" />
+                        </a>
+                        <div class="dropdown-menu">
+                            <a id="navblog-myblog-text" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx">我的博客</a>
+                            <a href="https://home.cnblogs.com/">我的园子</a>
+                            <a href="https://account.cnblogs.com/settings/account">账号设置</a>
+                            <a href="javascript:void(0)" onclick="logout();">退出登录</a>
+                        </div>
+                    </div>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signup/">注册</a>
+                    <a class="navbar-anonymous" href="javascript:void(0);" onclick="login()">登录</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    
+    <!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+        <a id="lnkBlogLogo" href="https://www.cnblogs.com/hi-nginx/"><img id="blogLogo" src="/skins/custom/images/logo.gif" alt="返回主页" /></a>		
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/hi-nginx/">hi-nginx</a>
+</h1>
+<h2>
+
+</h2>
+
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+<li>
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/hi-nginx/">
+首页</a>
+</li>
+<li>
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+</li>
+<li>
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/hi-nginx">
+联系</a></li>
+<li>
+<a id="blog_nav_rss" class="menu" href="javascript:void(0)" data-rss="https://www.cnblogs.com/hi-nginx/rss/">
+订阅</a>
+<!--<partial name="./Shared/_XmlLink.cshtml" model="Model" /></li>--></li>
+<li>
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+</ul>
+
+
+		<div class="blogStats">
+			<span id="stats_post_count">随笔 - 
+16&nbsp; </span>
+<span id="stats_article_count">文章 - 
+0&nbsp; </span>
+<span id="stats-comment_count">评论 - 
+8</span>
+
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="post_detail">
+    <!--done-->
+    <div id="topics">
+        <div class="post">
+            <h1 class = "postTitle">
+                
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/hi-nginx/p/13939814.html">
+    <span>作为servlet容器的hi-nginx-java</span>
+    
+
+
+</a>
+
+            </h1>
+            <div class="clear"></div>
+            <div class="postBody">
+                
+<div id="cnblogs_post_body" class="blogpost-body">
+    <p>hi-nginx-java是一个独立于java官方的servlet规范，它有能力把NGINX直接编成servlet容器服务器。换言之，无需安装tomcat等容器服务器，也无需使用nginx的反向代理功能，只需安装jdk8+和hi-nginx，就能进行java web开发工作，而且性能更好。</p>
+<p>&nbsp;</p>
+<p>先看NGINX的配置文件部分:</p>
+<div class="cnblogs_code">
+<pre>hi_java_classpath "-Djava.class.path=.:/usr/local/nginx/java:/usr/local/nginx/java/hi-nginx-java.jar:/usr/local/nginx/java/jdemo.jar"<span style="color: rgba(0, 0, 0, 1)">
+
+location ~ \.java {
+            rewrite ^/(.*)\.java$ /$</span>1 break<span style="color: rgba(0, 128, 0, 1)">;
+</span>            hi_need_kvdb on<span style="color: rgba(0, 128, 0, 1)">;
+</span>            hi_kvdb_size 50<span style="color: rgba(0, 128, 0, 1)">;
+</span>            hi_kvdb_expires 5m<span style="color: rgba(0, 128, 0, 1)">;
+</span>            hi_need_session on<span style="color: rgba(0, 128, 0, 1)">;
+</span>            hi_need_headers on<span style="color: rgba(0, 128, 0, 1)">;
+</span>            hi_need_cookies on<span style="color: rgba(0, 128, 0, 1)">;
+</span>            hi_java_servlet hi/jdemo<span style="color: rgba(0, 128, 0, 1)">;</span>    
+        }</pre>
+</div>
+<p>应用是jdemo.jar。hi-nginx需要调用的入口servlet是hi.jdemo，配置时用/斜杠代替.点。该类的实现如下：</p>
+<div class="cnblogs_code">
+<pre><span style="color: rgba(0, 0, 255, 1)">package</span><span style="color: rgba(0, 0, 0, 1)"> hi;
+
+</span><span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> hi.servlet;
+</span><span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> hi.route;
+
+</span><span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> java.util.ArrayList;
+</span><span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> java.util.Arrays;
+</span><span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> java.util.HashMap;
+</span><span style="color: rgba(0, 0, 255, 1)">import</span><span style="color: rgba(0, 0, 0, 1)"> java.util.regex.Matcher;
+
+</span><span style="color: rgba(0, 0, 255, 1)">public</span> <span style="color: rgba(0, 0, 255, 1)">class</span> jdemo <span style="color: rgba(0, 0, 255, 1)">implements</span><span style="color: rgba(0, 0, 0, 1)"> hi.servlet {
+
+    </span><span style="color: rgba(0, 0, 255, 1)">private</span> <span style="color: rgba(0, 0, 255, 1)">static</span> hi.route r =<span style="color: rgba(0, 0, 0, 1)"> hi.route.get_instance();
+
+    </span><span style="color: rgba(0, 0, 255, 1)">public</span><span style="color: rgba(0, 0, 0, 1)"> jdemo() {
+        jdemo.r.get(</span>"^/(hello|test)/?$", (hi.request req, hi.response res, Matcher m) -&gt;<span style="color: rgba(0, 0, 0, 1)"> {
+            </span><span style="color: rgba(0, 0, 255, 1)">this</span><span style="color: rgba(0, 0, 0, 1)">.do_hello(req, res);
+        });
+        jdemo.r.get(</span>"^/error/?$", (hi.request req, hi.response res, Matcher m) -&gt;<span style="color: rgba(0, 0, 0, 1)"> {
+            </span><span style="color: rgba(0, 0, 255, 1)">this</span><span style="color: rgba(0, 0, 0, 1)">.do_error(req, res);
+        });
+        jdemo.r.get(</span>"^/redirect/?$", (hi.request req, hi.response res, Matcher m) -&gt;<span style="color: rgba(0, 0, 0, 1)"> {
+            </span><span style="color: rgba(0, 0, 255, 1)">this</span><span style="color: rgba(0, 0, 0, 1)">.do_redirect(req, res);
+        });
+        jdemo.r.add(</span><span style="color: rgba(0, 0, 255, 1)">new</span> ArrayList&lt;String&gt;(Arrays.asList("GET", "POST")), "^/form/?$"<span style="color: rgba(0, 0, 0, 1)">,
+                (hi.request req, hi.response res, Matcher m) </span>-&gt;<span style="color: rgba(0, 0, 0, 1)"> {
+                    </span><span style="color: rgba(0, 0, 255, 1)">this</span><span style="color: rgba(0, 0, 0, 1)">.do_form(req, res);
+                });
+        jdemo.r.get(</span>"^/session/?$", (hi.request req, hi.response res, Matcher m) -&gt;<span style="color: rgba(0, 0, 0, 1)"> {
+            </span><span style="color: rgba(0, 0, 255, 1)">this</span><span style="color: rgba(0, 0, 0, 1)">.do_session(req, res);
+        });
+        jdemo.r.get(</span>"^/md5/?$", (hi.request req, hi.response res, Matcher m) -&gt;<span style="color: rgba(0, 0, 0, 1)"> {
+            </span><span style="color: rgba(0, 0, 255, 1)">this</span><span style="color: rgba(0, 0, 0, 1)">.do_md5(req, res);
+        });
+    }
+
+    </span><span style="color: rgba(0, 0, 255, 1)">public</span> <span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)"> handler(hi.request req, hi.response res) {
+        jdemo.r.run(req, res);
+    }
+
+    </span><span style="color: rgba(0, 0, 255, 1)">private</span> <span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)"> do_hello(hi.request req, hi.response res) {
+        res.headers.get(</span>"Content-Type").set(0, "text/plain;charset=UTF-8"<span style="color: rgba(0, 0, 0, 1)">);
+        res.status </span>= 200<span style="color: rgba(0, 0, 0, 1)">;
+        res.content </span>= "hello,world"<span style="color: rgba(0, 0, 0, 1)">;
+    }
+
+    </span><span style="color: rgba(0, 0, 255, 1)">private</span> <span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)"> do_error(hi.request req, hi.response res) {
+        res.headers.get(</span>"Content-Type").set(0, "text/plain;charset=UTF-8"<span style="color: rgba(0, 0, 0, 1)">);
+        res.status </span>= 404<span style="color: rgba(0, 0, 0, 1)">;
+        res.content </span>= "404 Not found"<span style="color: rgba(0, 0, 0, 1)">;
+    }
+
+    </span><span style="color: rgba(0, 0, 255, 1)">private</span> <span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)"> do_redirect(hi.request req, hi.response res) {
+        res.status </span>= 302<span style="color: rgba(0, 0, 0, 1)">;
+        ArrayList</span>&lt;String&gt; h = <span style="color: rgba(0, 0, 255, 1)">new</span> ArrayList&lt;String&gt;<span style="color: rgba(0, 0, 0, 1)">();
+        h.add(</span>"/hello.java"<span style="color: rgba(0, 0, 0, 1)">);
+        res.headers.put(</span>"Location"<span style="color: rgba(0, 0, 0, 1)">, h);
+    }
+
+    </span><span style="color: rgba(0, 0, 255, 1)">private</span> <span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)"> do_form(hi.request req, hi.response res) {
+        res.headers.get(</span>"Content-Type").set(0, "text/plain;charset=UTF-8"<span style="color: rgba(0, 0, 0, 1)">);
+        res.status </span>= 200<span style="color: rgba(0, 0, 0, 1)">;
+        StringBuilder buffer </span>= <span style="color: rgba(0, 0, 255, 1)">new</span><span style="color: rgba(0, 0, 0, 1)"> StringBuilder();
+
+        buffer.append(</span>"head data " + req.headers.size() + "\n"<span style="color: rgba(0, 0, 0, 1)">);
+        buffer.append(</span><span style="color: rgba(0, 0, 255, 1)">this</span><span style="color: rgba(0, 0, 0, 1)">.do_foreach(req.headers));
+
+        buffer.append(</span>"\ncookie data " + req.cookies.size() + "\n"<span style="color: rgba(0, 0, 0, 1)">);
+        buffer.append(</span><span style="color: rgba(0, 0, 255, 1)">this</span><span style="color: rgba(0, 0, 0, 1)">.do_foreach(req.cookies));
+
+        buffer.append(</span>"\nform data " + req.form.size() + "\n"<span style="color: rgba(0, 0, 0, 1)">);
+        buffer.append(</span><span style="color: rgba(0, 0, 255, 1)">this</span><span style="color: rgba(0, 0, 0, 1)">.do_foreach(req.form));
+
+        buffer.append(String.format(</span>"\nclient= %s\nmethod= %s\nuser_agent= %s\nuri= %s\nparam= %s\n"<span style="color: rgba(0, 0, 0, 1)">, req.client,
+                req.method, req.user_agent, req.uri, req.param));
+
+        res.content </span>=<span style="color: rgba(0, 0, 0, 1)"> buffer.toString();
+    }
+
+    </span><span style="color: rgba(0, 0, 255, 1)">private</span> <span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)"> do_session(hi.request req, hi.response res) {
+        res.headers.get(</span>"Content-Type").set(0, "text/plain;charset=UTF-8"<span style="color: rgba(0, 0, 0, 1)">);
+        res.status </span>= 200<span style="color: rgba(0, 0, 0, 1)">;
+        String key </span>= "test"<span style="color: rgba(0, 0, 0, 1)">;
+        </span><span style="color: rgba(0, 0, 255, 1)">int</span> value = 0<span style="color: rgba(0, 0, 0, 1)">;
+        </span><span style="color: rgba(0, 0, 255, 1)">if</span><span style="color: rgba(0, 0, 0, 1)"> (req.session.containsKey(key)) {
+            value </span>= Integer.parseInt(req.session.get(key)) + 1<span style="color: rgba(0, 0, 0, 1)">;
+        }
+        res.session.put(key, String.valueOf(value));
+        res.content </span>= String.format("hello,%d"<span style="color: rgba(0, 0, 0, 1)">, value);
+        res.status </span>= 200<span style="color: rgba(0, 0, 0, 1)">;
+    }
+
+    </span><span style="color: rgba(0, 0, 255, 1)">private</span> <span style="color: rgba(0, 0, 255, 1)">void</span><span style="color: rgba(0, 0, 0, 1)"> do_md5(hi.request req, hi.response res) {
+        res.headers.get(</span>"Content-Type").set(0, "text/plain;charset=UTF-8"<span style="color: rgba(0, 0, 0, 1)">);
+        String plaintext </span>= "hello,md5!"<span style="color: rgba(0, 0, 0, 1)">;
+        res.status </span>= 200<span style="color: rgba(0, 0, 0, 1)">;
+        res.content </span>= String.format("%s\nmd5= %s", plaintext, <span style="color: rgba(0, 0, 255, 1)">this</span><span style="color: rgba(0, 0, 0, 1)">.md5(plaintext));
+    }
+
+    </span><span style="color: rgba(0, 0, 255, 1)">private</span><span style="color: rgba(0, 0, 0, 1)"> String md5(String str) {
+        </span><span style="color: rgba(0, 0, 255, 1)">try</span><span style="color: rgba(0, 0, 0, 1)"> {
+            java.security.MessageDigest md </span>= java.security.MessageDigest.getInstance("MD5"<span style="color: rgba(0, 0, 0, 1)">);
+            </span><span style="color: rgba(0, 0, 255, 1)">byte</span>[] array =<span style="color: rgba(0, 0, 0, 1)"> md.digest(str.getBytes());
+            StringBuffer sb </span>= <span style="color: rgba(0, 0, 255, 1)">new</span><span style="color: rgba(0, 0, 0, 1)"> StringBuffer();
+            </span><span style="color: rgba(0, 0, 255, 1)">for</span> (<span style="color: rgba(0, 0, 255, 1)">int</span> i = 0; i &lt; array.length; ++<span style="color: rgba(0, 0, 0, 1)">i) {
+                sb.append(Integer.toHexString((array[i] </span>&amp; 0xFF) | 0x100).substring(1, 3<span style="color: rgba(0, 0, 0, 1)">));
+            }
+            </span><span style="color: rgba(0, 0, 255, 1)">return</span><span style="color: rgba(0, 0, 0, 1)"> sb.toString();
+        } </span><span style="color: rgba(0, 0, 255, 1)">catch</span><span style="color: rgba(0, 0, 0, 1)"> (java.security.NoSuchAlgorithmException e) {
+        }
+        </span><span style="color: rgba(0, 0, 255, 1)">return</span> <span style="color: rgba(0, 0, 255, 1)">null</span><span style="color: rgba(0, 0, 0, 1)">;
+    }
+
+    </span><span style="color: rgba(0, 0, 255, 1)">private</span> String do_foreach(HashMap&lt;String, String&gt;<span style="color: rgba(0, 0, 0, 1)"> m) {
+        StringBuffer buffer </span>= <span style="color: rgba(0, 0, 255, 1)">new</span><span style="color: rgba(0, 0, 0, 1)"> StringBuffer();
+        </span><span style="color: rgba(0, 0, 255, 1)">for</span> (HashMap.Entry&lt;String, String&gt;<span style="color: rgba(0, 0, 0, 1)"> item : m.entrySet()) {
+            buffer.append(String.format(</span>"%s\t=\t%s\n"<span style="color: rgba(0, 0, 0, 1)">, item.getKey(), item.getValue()));
+        }
+        </span><span style="color: rgba(0, 0, 255, 1)">return</span><span style="color: rgba(0, 0, 0, 1)"> buffer.toString();
+    }
+}</span></pre>
+</div>
+<p>将其用javac和jar编译组装为jdemo.jar文件后，安装至/usr/local/nginx/java目录中。编写好上述nginx配置，restart或者reload nginx即可通过访问http://localhost/*.java即可获得相应的服务。</p>
+<p>hi.route的hi-nginx-java自带的一个路由器，可实现类似python Flask框架的功能。如此，可大幅度省去tomcat应用发布时繁琐的配置过程，而且能够获得更好的应用性能。如果通过<code class="lang-nginx">hi_need_cache开启LRU缓存，无论多短的缓存时间，哪怕仅仅1秒，也能使得应用获得近乎nginx静态文件服务一样的性能表现，并且不会想tomcat等服务器那样大幅度消耗cpu和内存。</code></p>
+<p>&nbsp;</p>
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+    <div id="blog_post_info"></div>
+    <div class="clear"></div>
+    <div id="post_next_prev"></div>
+</div>
+            </div>
+            <div class="postDesc">posted @ 
+<span id="post-date">2020-11-07 09:13</span>&nbsp;
+<a href="https://www.cnblogs.com/hi-nginx/">hi-nginx</a>&nbsp;
+阅读(<span id="post_view_count">20</span>)&nbsp;
+评论(<span id="post_comment_count">0</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=13939814" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(13939814);return false;">收藏</a></div>
+        </div>
+	    
+	    
+    </div><!--end: topics 文章、评论容器-->
+</div>
+<script src="https://common.cnblogs.com/highlight/10.3.1/highlight.min.js"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 420944, cb_blogApp = 'hi-nginx', cb_blogUserGuid = '16406b63-51b6-4581-c463-08d58662b770';
+    var cb_entryId = 13939814, cb_entryCreatedDate = '2020-11-07 09:13', cb_postType = 1;
+    updatePostStats(
+        [cb_entryId],
+        function(id, count) { $("#post_view_count").text(count) },
+        function(id, count) { $("#post_comment_count").text(count) })
+</script>
+<a name="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+    <div id="comment_form_container"></div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id='div-gpt-ad-1592365906576-0' style='width: 300px; height: 250px;'></div>
+    </div>
+    <div id="under_post_news"></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id='div-gpt-ad-1592366332455-0' style='width: 468px; height: 60px;'></div>
+    </div>
+    <div id="under_post_kb"></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+       var commentManager = new blogCommentManager();
+       commentManager.renderComments(0);
+       fixPostBody();
+       deliverBigBanner();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);       deliverT2();
+       deliverC1C2();
+       loadNewsAndKb();
+       loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);       LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+       GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+       loadOptUnderPost();
+       GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+   </script>
+</div>
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+	<div id="sideBar">
+		<div id="sideBarMain">
+			<div id="sidebar_news" class="newsItem">
+            <script>loadBlogNews();</script>
+</div>
+<div id="sidebar_ad"></div>
+			<div id="blog-calendar" style="display:none"></div><script>loadBlogDefaultCalendar();</script>			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div>
+                    <script>loadBlogSideColumn();</script>
+			</div>			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		<!--done-->
+Copyright &copy; 2020 hi-nginx
+<br /><span id="poweredby">Powered by .NET 5.0.0-rc.2.20475.5 on Kubernetes</span>
+
+
+
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+    
+</body>
+</html>

@@ -1,0 +1,291 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="origin" />
+    <meta name="description" content="前言 从上个月，因工作需要外加兴趣所知，博主开始学习Kubernetes，时至今日可以说是刚刚入门。独自学不如一起学，后面博主会一边学着一边将学习内容以博文的形式呈现出来，希望能跟各位园友有问题一起讨" />
+    <meta property="og:description" content="前言 从上个月，因工作需要外加兴趣所知，博主开始学习Kubernetes，时至今日可以说是刚刚入门。独自学不如一起学，后面博主会一边学着一边将学习内容以博文的形式呈现出来，希望能跟各位园友有问题一起讨" />
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>傲视Kubernetes(一)：Kubernetes简介 - 淡墨痕 - 博客园</title>
+    <link id="favicon" rel="shortcut icon" href="//common.cnblogs.com/favicon.svg" type="image/svg+xml" />
+    
+    <link rel="stylesheet" href="/css/blog-common.min.css?v=WWIukVRKd_9oNM5WDgpTM9pDw7D0MhGFFz2HCnaFMII" />
+    <link id="MainCss" rel="stylesheet" href="/skins/sea/bundle-sea.min.css?v=oF2SvRIFQNTLcLgn66nPy-bOeZ-5NDS8tPrc0Kt42ys" />
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/skins/sea/bundle-sea-mobile.min.css?v=OIiHXs5__UmHEO1y_Kt9k2hwcjPr7WstmLavlBgsM9I" />
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/zzq6032010/rss" />
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/zzq6032010/rsd.xml" />
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/zzq6032010/wlwmanifest.xml" />
+    <script>
+        var currentBlogId = 480915;
+        var currentBlogApp = 'zzq6032010';
+        var cb_enable_mathjax = false;
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'sea';
+        var visitorUserId = '';
+    </script>
+        <script>
+            var currentPostDateAdded = '2020-11-07 10:30';
+        </script>
+    <script src="https://common.cnblogs.com/scripts/jquery-2.2.0.min.js"></script>
+    <script src="/js/blog-common.min.js?v=Rl4AGPYQiYM_G04eeyD7j1ApU6lPTlKLJmzUYVYLorE"></script>
+    
+    
+    
+</head>
+<body class="has-navbar">
+    <a name="top"></a>
+    <div id="bannerbar" class="formobile">
+        <a href="https://brands.cnblogs.com/aws/free?source=mobile-banner" target="_blank" onclick="ga('send', 'event', 'Link', 'click', 'aws-mobile-bannerbar')"><img src="https://img2020.cnblogs.com/blog/35695/202011/35695-20201104135303888-13496776.png" alt=""/></a>
+    </div>
+    <div id="top_nav" class="navbar">
+        <nav id="nav_main" class="navbar-main">
+            <ul id="nav_left" class="navbar-list navbar-left">
+                <li class="navbar-branding"><a href="https://www.cnblogs.com/" title="开发者的网上家园"><img src="/images/logo.svg?v=R9M0WmLAIPVydmdzE2keuvnjl-bPR7_35oHqtiBzGsM" alt="博客园Logo" /></a></li>
+                <li><a href="/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-sitehome')">首页</a></li>
+                <li><a href="https://news.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-news')">新闻</a></li>
+                <li><a href="https://q.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-q')">博问</a></li>
+                <li><a id="nav_brandzone" href="https://brands.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-brands')">专区</a></li>
+                <li><a href="https://ing.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-ing')">闪存</a></li>
+                <li><a href="https://brands.cnblogs.com/aws/free" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-aws')">云上钜惠</a></li>
+            </ul>
+            <ul id="nav_right" class="navbar-list navbar-right">
+                <li>
+                    <form id="zzk_search" class="navbar-search" action="https://zzk.cnblogs.com/s" method="get">
+                        <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="text" tabindex="3" />
+                        <button type="submit" id="zzk_search_button">
+                            <img src="/images/aggsite/search.svg" alt="搜索" />
+                        </button>
+                    </form>
+                </li>
+                <li id="navbar_login_status" class="navbar-list">
+                    <a id="navblog-myblog-icon" class="navbar-user-info navbar-blog" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx" alt="我的博客" title="我的博客">
+                        <img id="myblog_icon" class="navbar-icon" src="/images/aggsite/myblog.svg" alt="我的博客" />
+                    </a>
+                    <a class="navbar-user-info navbar-message navbar-icon-wrapper" href="https://msg.cnblogs.com/" alt="短消息" title="短消息">
+                        <img id="msg_icon" class="navbar-icon" src="/images/aggsite/message.svg?v=oS4PkibyMjZ9rGD5XAcLt99uW_s76Javy2up4dbnZNY" alt="短消息" />
+                        <span id="msg_count" style="display: none"></span>
+                    </a>
+                    <div id="user_info" class="navbar-user-info dropdown">
+                        <a class="dropdown-button" href="https://home.cnblogs.com/">
+                            <img id="user_icon" class="navbar-avatar" src="/images/aggsite/avatar-default.svg" alt="用户头像" />
+                        </a>
+                        <div class="dropdown-menu">
+                            <a id="navblog-myblog-text" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx">我的博客</a>
+                            <a href="https://home.cnblogs.com/">我的园子</a>
+                            <a href="https://account.cnblogs.com/settings/account">账号设置</a>
+                            <a href="javascript:void(0)" onclick="logout();">退出登录</a>
+                        </div>
+                    </div>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signup/">注册</a>
+                    <a class="navbar-anonymous" href="javascript:void(0);" onclick="login()">登录</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    
+    <!--done-->
+<div id="header">
+	
+<!--done-->
+<div class="header">
+	<div class="headerText">
+		<a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/zzq6032010/">张曾经</a>
+<br>
+		
+
+
+	</div>
+</div>
+
+
+</div>
+
+<div id="mytopmenu">
+	
+		<div id="mylinks">
+<a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+ &nbsp;
+
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/zzq6032010/">
+首页</a>
+ &nbsp;
+
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+ &nbsp;
+
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/%E6%B7%A1%E5%A2%A8%E7%97%95">
+联系</a> &nbsp;
+
+<a id="blog_nav_rss" class="menu" href="javascript:void(0)" data-rss="https://www.cnblogs.com/zzq6032010/rss/">
+订阅</a>
+<a id="blog_nav_rss_image" href="https://www.cnblogs.com/zzq6032010/rss/">
+    <img src="/skins/sea/images/xml.gif" alt="订阅" />
+</a>&nbsp;
+
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+
+
+</div>
+		<DIV id="mystats">随笔 -
+
+71&nbsp;
+文章 -
+
+0&nbsp;
+评论 -
+
+37&nbsp;
+<!--trackbacks-<partial name="./Shared/_PingTrackCount.cshtml" model="BlogServer.Web.Models.DetailBlogPage" />-->
+</DIV>
+	
+</div>
+<div id="centercontent">
+	<div id="post_detail">
+<div class="post">
+	<h1 class = "postTitle">
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/zzq6032010/p/13939149.html">
+    <span>傲视Kubernetes(一)：Kubernetes简介</span>
+    
+
+
+</a>
+</h1>
+	
+<div id="cnblogs_post_body" class="blogpost-body">
+    <p><span style="font-size: 18px; background-color: rgba(136, 136, 136, 1); color: rgba(0, 0, 0, 1)"><strong>前言</strong></span></p>
+<p>&nbsp; &nbsp; &nbsp; 从上个月，因工作需要外加兴趣所知，博主开始学习Kubernetes，时至今日可以说是刚刚入门。独自学不如一起学，后面博主会一边学着一边将学习内容以博文的形式呈现出来，希望能跟各位园友有问题一起讨论，在不断的交流中互补有无，一起学习进步。本系列取名【傲视Kubernetes】，要的就是这股气势，力争把它学好学精。闲话少叙，下面开始傲视Kubernetes之旅。</p>
+<p><strong>目标：</strong></p>
+<p><strong>1、Kubernetes是什么？为什么要用Kubernetes？</strong></p>
+<p><strong>2、Kubernetes和Docker的关系</strong></p>
+<p><strong>3、Kubernetes的架构</strong></p>
+<p><span style="font-size: 18px"><strong><span style="background-color: rgba(136, 136, 136, 1)">正文</span></strong></span></p>
+<p><span style="font-size: 15px"><strong>1、Kubernetes是什么？为什么要用Kubernetes？</strong></span></p>
+<p>&nbsp; &nbsp; 相信干过开发的园友们都能感受到近年来微服务化的流行，不管是求职面试时，还是公众号朋友圈各种打广告的培训班，都会提到微服务的相关东西。而随着越来越多单体项目的微服务化，以及大项目的微服务拆分，需要有一个应用可以针<strong>对数量众多的微服务进行自动调度、配置、监管和故障处理</strong>，而这就是Kubernetes的定位。</p>
+<p>&nbsp; &nbsp; 且看一下官网对Kubernetes的定义：<strong>Kubernetes is an open source container orchestration engine for automating deployment, scaling, and management of containerized applications.</strong></p>
+<p>&nbsp; &nbsp; 可以看出来，它是一个开源的容器编排引擎，这个引擎可以自动部署、伸缩和管理容器化应用。大体上跟咱上面总结的大差不差。</p>
+<p>&nbsp; &nbsp; 说完了Kubernetes是什么，再来看它的优势是什么？为什么要用它呢？</p>
+<p>1)、简化应用程序部署：即你不需要关注你的应用部署在了哪台机器上，Kubernetes会自动给你准备好需要的计算资源和存储资源。并且只要集群搭建的方式一样，它也可以保证开发测试生产环境的一致性。</p>
+<p>2)、更好的利用硬件：Kubernetes在给应用分配运行节点时，会自动匹配最优的节点，提高资源利用率。</p>
+<p>3)、健康检查和自修复：Kubernetes会监控你应用运行的节点的状态，当它出现故障时，会重新调度其他节点补上，无需人工参与。</p>
+<p>4)、自动扩容：可以让Kubernetes根据应用程序的负载情况自动做出反应，比如增加节点或减少节点。</p>
+<p><span style="font-size: 15px"><strong>&nbsp;2、Kubernetes和Docker的关系</strong></span></p>
+<p>&nbsp; &nbsp; 说它们关系之前，首先要提一下Docker是什么。</p>
+<p>&nbsp; &nbsp; Docker是一个打包、分发和运行应用程序的容器平台。容器相当于一种轻量级的虚拟机。<strong>虚拟机是在宿主机的基础上又重新创建了一套自己的操作系统</strong>，虚拟机中的进程运行在这个虚拟出来的操作系统上。而容器则作为一个进程仍然运行在宿主机的操作系统上，所以<strong>相比虚拟机容器不需要额外创建出一套操作系统</strong>，节省了资源，更轻量级。容器的隔离机制，是借助于Linux命名空间和cgroup来实现的。</p>
+<p>&nbsp; &nbsp; &nbsp;再来看Docker和Kubernetes的关系。从上面第一部分Kubernetes的定义中我们知道，Kubernetes是一个容器编排引擎，可以管理容器化应用。此处的容器化技术就是指Docker，即<strong>Kubernetes管理Docker容器化出来的容器</strong>。当然随着容器化技术的发展，除了Docker之外，Kubernetes还支持其他的几种容器化技术，比如containered、CRI-O等。</p>
+<p><span style="font-size: 15px"><strong>3、Kubernetes的架构</strong></span></p>
+<p>&nbsp; &nbsp; Kubernetes架构可以分为以下两部分：控制面板和工作节点。具体组成大体如下图所示，此处只需有个大体的印象即可，后面会一起更详细的学习。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1558028/202011/1558028-20201107094959228-254110842.png" alt="" loading="lazy"></p>
+<p>apiserver：是Kubernetes集群操作的入口，外界操作指令先到apiserver，然后它再把指令下发到具体的节点/服务</p>
+<p>etcd：是Kubernetes集群的分布式配置数据中心，所有集群的配置都存在它那里</p>
+<p>Scheduler：Kubernetes调度器，负责pod的分配</p>
+<p>Controller Manager：执行集群级别的功能，比如跟踪工作节点、处理失败节点等</p>
+<p>kubelet：与apiserver通信，并管理它所在节点的容器</p>
+<p>kube-proxy：负责节点的网络通讯</p>
+<p>容器运行时（container runtime）:指docker等容器化技术</p>
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+    <div id="blog_post_info"></div>
+    <div class="clear"></div>
+    <div id="post_next_prev"></div>
+</div>
+	<div class="postDesc">posted on 
+<span id="post-date">2020-11-07 10:30</span>&nbsp;
+<a href="https://www.cnblogs.com/zzq6032010/">淡墨痕</a>&nbsp;
+阅读(<span id="post_view_count">0</span>)&nbsp;
+评论(<span id="post_comment_count">0</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=13939149" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(13939149);return false;">收藏</a></div>
+</div>
+
+
+<script src="https://common.cnblogs.com/highlight/10.3.1/highlight.min.js"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 480915, cb_blogApp = 'zzq6032010', cb_blogUserGuid = '3d5cc4e6-adaa-4c3d-a002-08d65c9406c0';
+    var cb_entryId = 13939149, cb_entryCreatedDate = '2020-11-07 10:30', cb_postType = 1;
+    updatePostStats(
+        [cb_entryId],
+        function(id, count) { $("#post_view_count").text(count) },
+        function(id, count) { $("#post_comment_count").text(count) })
+</script>
+<a name="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+    <div id="comment_form_container"></div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id='div-gpt-ad-1592365906576-0' style='width: 300px; height: 250px;'></div>
+    </div>
+    <div id="under_post_news"></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id='div-gpt-ad-1592366332455-0' style='width: 468px; height: 60px;'></div>
+    </div>
+    <div id="under_post_kb"></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+       var commentManager = new blogCommentManager();
+       commentManager.renderComments(0);
+       fixPostBody();
+       deliverBigBanner();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);       deliverT2();
+       deliverC1C2();
+       loadNewsAndKb();
+       loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);       LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+       GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+       loadOptUnderPost();
+       GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+   </script>
+</div>
+
+</div>
+
+
+</div>
+<div id="leftcontent">
+	
+		<DIV id="leftcontentcontainer">
+			<div id="sidebar_news" class="newsItem">
+            <script>loadBlogNews();</script>
+</div>
+<div id="sidebar_ad"></div>
+			<div id="calendar"><div id="blog-calendar" style="display:none"></div></div>                
+                    <script>loadBlogDefaultCalendar();</script><br>
+			<div id="blog-sidecolumn"></div>
+                    <script>loadBlogSideColumn();</script></DIV>
+	
+</div>
+<!--done-->
+<div class="footer">
+	Powered by: <a href="http://www.cnblogs.com">博客园</a>
+	Copyright &copy; 2020 淡墨痕
+<br /><span id="poweredby">Powered by .NET 5.0.0-rc.2.20475.5 on Kubernetes</span>
+
+</div>
+
+
+
+
+
+
+    
+</body>
+</html>

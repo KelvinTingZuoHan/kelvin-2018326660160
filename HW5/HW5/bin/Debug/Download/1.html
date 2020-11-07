@@ -1,0 +1,861 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="never" />
+    <meta name="description" content="本文基于阿里推荐DIEN代码，梳理了下RNN一些概念，以及TensorFlow中的部分源码。本博客旨在帮助小伙伴们详细了解每一步骤以及为什么要这样做。" />
+    <meta property="og:description" content="本文基于阿里推荐DIEN代码，梳理了下RNN一些概念，以及TensorFlow中的部分源码。本博客旨在帮助小伙伴们详细了解每一步骤以及为什么要这样做。" />
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>[论文阅读] RNN 在阿里DIEN中的应用 - 罗西的思考 - 博客园</title>
+    <link id="favicon" rel="shortcut icon" href="//common.cnblogs.com/favicon.svg" type="image/svg+xml" />
+    
+    <link rel="stylesheet" href="/css/blog-common.min.css?v=WWIukVRKd_9oNM5WDgpTM9pDw7D0MhGFFz2HCnaFMII" />
+    <link id="MainCss" rel="stylesheet" href="/skins/lessismoreright/bundle-lessismoreright.min.css?v=e3rAXY6I74pStM77vahCXGbX594jbzmAR7_FvGIsWlQ" />
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/skins/lessismoreright/bundle-lessismoreright-mobile.min.css?v=vYMDpdm5Y5Vif1DJ2cDXnPc7ldXlb8hJHvalgK08PLE" />
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/rossiXYZ/rss" />
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/rossiXYZ/rsd.xml" />
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/rossiXYZ/wlwmanifest.xml" />
+    <script>
+        var currentBlogId = 556264;
+        var currentBlogApp = 'rossiXYZ';
+        var cb_enable_mathjax = true;
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'LessIsMoreRight';
+        var visitorUserId = '';
+    </script>
+        <script>
+            var currentPostDateAdded = '2020-11-07 08:40';
+        </script>
+    <script src="https://common.cnblogs.com/scripts/jquery-2.2.0.min.js"></script>
+    <script src="/js/blog-common.min.js?v=Rl4AGPYQiYM_G04eeyD7j1ApU6lPTlKLJmzUYVYLorE"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']], processClass: 'math', processEscapes: true },
+        TeX: {
+        equationNumbers: { autoNumber: ['AMS'], useLabelIds: true },
+        extensions: ['extpfeil.js', 'mediawiki-texvc.js'],
+        Macros: {bm: "\\boldsymbol"}
+        },
+        'HTML-CSS': { linebreaks: { automatic: true } },
+        SVG: { linebreaks: { automatic: true } }
+        });
+    </script>
+    <script src="https://mathjax.cnblogs.com/2_7_5/MathJax.js?config=TeX-AMS-MML_HTMLorMML&amp;v=20200504"></script>
+    
+</head>
+<body class="has-navbar">
+    <a name="top"></a>
+    <div id="bannerbar" class="formobile">
+        <a href="https://brands.cnblogs.com/aws/free?source=mobile-banner" target="_blank" onclick="ga('send', 'event', 'Link', 'click', 'aws-mobile-bannerbar')"><img src="https://img2020.cnblogs.com/blog/35695/202011/35695-20201104135303888-13496776.png" alt=""/></a>
+    </div>
+    <div id="top_nav" class="navbar">
+        <nav id="nav_main" class="navbar-main">
+            <ul id="nav_left" class="navbar-list navbar-left">
+                <li class="navbar-branding"><a href="https://www.cnblogs.com/" title="开发者的网上家园"><img src="/images/logo.svg?v=R9M0WmLAIPVydmdzE2keuvnjl-bPR7_35oHqtiBzGsM" alt="博客园Logo" /></a></li>
+                <li><a href="/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-sitehome')">首页</a></li>
+                <li><a href="https://news.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-news')">新闻</a></li>
+                <li><a href="https://q.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-q')">博问</a></li>
+                <li><a id="nav_brandzone" href="https://brands.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-brands')">专区</a></li>
+                <li><a href="https://ing.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-ing')">闪存</a></li>
+                <li><a href="https://brands.cnblogs.com/aws/free" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-aws')">云上钜惠</a></li>
+            </ul>
+            <ul id="nav_right" class="navbar-list navbar-right">
+                <li>
+                    <form id="zzk_search" class="navbar-search" action="https://zzk.cnblogs.com/s" method="get">
+                        <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="text" tabindex="3" />
+                        <button type="submit" id="zzk_search_button">
+                            <img src="/images/aggsite/search.svg" alt="搜索" />
+                        </button>
+                    </form>
+                </li>
+                <li id="navbar_login_status" class="navbar-list">
+                    <a id="navblog-myblog-icon" class="navbar-user-info navbar-blog" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx" alt="我的博客" title="我的博客">
+                        <img id="myblog_icon" class="navbar-icon" src="/images/aggsite/myblog.svg" alt="我的博客" />
+                    </a>
+                    <a class="navbar-user-info navbar-message navbar-icon-wrapper" href="https://msg.cnblogs.com/" alt="短消息" title="短消息">
+                        <img id="msg_icon" class="navbar-icon" src="/images/aggsite/message.svg?v=oS4PkibyMjZ9rGD5XAcLt99uW_s76Javy2up4dbnZNY" alt="短消息" />
+                        <span id="msg_count" style="display: none"></span>
+                    </a>
+                    <div id="user_info" class="navbar-user-info dropdown">
+                        <a class="dropdown-button" href="https://home.cnblogs.com/">
+                            <img id="user_icon" class="navbar-avatar" src="/images/aggsite/avatar-default.svg" alt="用户头像" />
+                        </a>
+                        <div class="dropdown-menu">
+                            <a id="navblog-myblog-text" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx">我的博客</a>
+                            <a href="https://home.cnblogs.com/">我的园子</a>
+                            <a href="https://account.cnblogs.com/settings/account">账号设置</a>
+                            <a href="javascript:void(0)" onclick="logout();">退出登录</a>
+                        </div>
+                    </div>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signup/">注册</a>
+                    <a class="navbar-anonymous" href="javascript:void(0);" onclick="login()">登录</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div id="page_begin_html">
+        
+
+    </div>
+    <div id="home">
+    <div id="header">
+        <div id="blogTitle">
+            
+<div class="title"><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/rossiXYZ/">罗西的思考</a>
+</div>
+<div class="subtitle">
+一手伸向技术，一手伸向生活
+</div>
+
+        </div>
+        <div id="navigator">
+            
+<ul id="navList">
+    <li id="nav_sitehome"><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+    <li id="nav_myhome">
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/rossiXYZ/">
+首页</a>
+</li>
+    <li id="nav_newpost">
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+</li>
+    <li id="nav_contact">
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/%E7%BD%97%E8%A5%BF%E7%9A%84%E6%80%9D%E8%80%83">
+联系</a></li>
+    <li id="nav_rss">
+<a id="blog_nav_rss" class="menu" href="javascript:void(0)" data-rss="https://www.cnblogs.com/rossiXYZ/rss/">
+订阅</a></li>
+    <li id="nav_admin">
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+</ul>
+
+            <div class="blogStats">
+                
+<span id="stats_post_count">随笔 - 
+98&nbsp;</span>
+<span id="stats_article_count">文章 - 
+0&nbsp;</span>
+<!-- <span id="stats-comment_count"></span> -->
+<span id="stats_comment_count">评论 - 
+14</span>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <div id="mainContent">
+            <div class="forFlow">
+                <div id="post_detail">
+    <div id="topics">
+        <div class="post">
+            <h1 class="postTitle">
+                
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/rossiXYZ/p/13939001.html">
+    <span>[论文阅读] RNN 在阿里DIEN中的应用</span>
+    
+
+
+</a>
+
+            </h1>
+            <div class="clear"></div>
+            <div class="postBody">
+                
+    <div id="cnblogs_post_description" style="display: none">
+        本文基于阿里推荐DIEN代码，梳理了下RNN一些概念，以及TensorFlow中的部分源码。本博客旨在帮助小伙伴们详细了解每一步骤以及为什么要这样做。
+    </div>
+<div id="cnblogs_post_body" class="blogpost-body cnblogs-markdown">
+    <h1 id="论文阅读-rnn-在阿里dien中的应用">[论文阅读] RNN 在阿里DIEN中的应用</h1>
+<h2 id="0x00-摘要">0x00 摘要</h2>
+<p>本文基于阿里推荐DIEN代码，梳理了下RNN一些概念，以及TensorFlow中的部分源码。本博客旨在帮助小伙伴们详细了解每一步骤以及为什么要这样做。</p>
+<h2 id="0x01-背景知识">0x01 背景知识</h2>
+<h3 id="11-rnn">1.1 RNN</h3>
+<p>RNN，循环神经网络，Recurrent Neural Networks。</p>
+<p>人们思考问题往往不是从零开始的，比如阅读时我们对每个词的理解都会依赖于前面看到的一些信息，而不是把前面看的内容全部抛弃再去理解某处的信息。应用到深度学习上面，如果我们想要学习去理解一些依赖上文的信息，RNN 便可以做到，它有一个循环的操作，可以使其可以保留之前学习到的内容。</p>
+<p>最普通的RNN定义方式是：</p>
+<pre><code class="language-python">output = new_state = f(W * input + U * state + B) = act(W * input + U * state + B)
+</code></pre>
+<ul>
+<li>U，W 是网络参数（权重矩阵），b 是偏置参数，这些参数通过后向传播训练网络学习得到。</li>
+<li>act 是激活函数，通常选择 sigmoid 或 tanh 函数。</li>
+</ul>
+<h3 id="12-dien项目代码">1.2 DIEN项目代码</h3>
+<p>在DIEN项目中，把TensorFlow的rnn代码拿到自己项目中，做了一些修改，具体是：</p>
+<ul>
+<li>使用了 GRUCell；</li>
+<li>自定义了 VecAttGRUCell；</li>
+<li>因为修改了VecAttGRUCell接口，所以修改了rnn.py；</li>
+</ul>
+<h2 id="0x02-cell">0x02 Cell</h2>
+<p>RNN的基本单元被称为Cell，别小看那一个小小的cell，它并不是只有1个neuron unit，而是n个hidden units。</p>
+<p>因此，我们注意到tensorflow中定义一个cell（BasicRNNCell/BasicLSTMCell/GRUCell/RNNCell/LSTMCell）结构的时候需要提供的一个参数就是hidden_units_size。</p>
+<p><img src="https://img2020.cnblogs.com/blog/1850883/202011/1850883-20201106212054722-54128773.png" alt="" loading="lazy"></p>
+<p>在实际的神经网络中，各个门处理函数 其实是由一定数量的隐含层神经元来处理。</p>
+<p>在RNN中，M个神经元组成的隐含层，实际的功能应该是 f(wx + b),  这里实现了两步：</p>
+<ul>
+<li>首先M个隐含层神经元与输入向量X之间全连接，通过w参数矩阵对x向量进行加权求和；</li>
+<li>其次就是对x向量各个维度上进行筛选，加上bias偏置矩阵后，通过f激励函数， 得到隐含层的输出；</li>
+</ul>
+<p>在LSTM Cell中，一个cell 包含了若干个门处理函数，假如每个门的物理实现，我们都可以看做是由num_hidden个神经元来实现该门函数功能， 那么每个门各自都包含了相应的w参数矩阵以及bias偏置矩阵参数，这就是在上图中的实现。</p>
+<p>从图中可以看出，cell单元里有四个门，每个门都对应128个隐含层神经元，相当于四个隐含层，每个隐含层各自与输入x 全连接，而输入x向量是由两部分组成，一部分是上一时刻cell 输出，大小为128， 还有部分就是当前样本向量的输入，大小为6，因此通过该cell内部计算后，最终得到当前时刻的输出，大小为128，即num_hidden，作为下一时刻cell的一部分输入。</p>
+<p>下面我们结合TensorFlow来具体剖析下Cell的实现机制和原理。</p>
+<h3 id="21-rnncell（抽象父类）">2.1 RNNCell（抽象父类）</h3>
+<h4 id="211-基础">2.1.1 基础</h4>
+<p><strong>“RNNCell”，它是TensorFlow中实现RNN的基本单元</strong>，每个RNNCell都有一个call方法，使用方式是：(output, next_state) = call(input, state)。</p>
+<p><u>RNNCell是一个抽象的父类</u>，其他的RNNcell都会继承该方法，然后具体实现其中的call()函数。</p>
+<p>RNNCell是包含一个State（状态）并且能够执行一些处理输入矩阵的对象。RNNCell将输入的矩阵（Input Matrix）运算输出一个包含”self.output”列的输出矩阵（Ouput Matrix）。</p>
+<p><strong>state</strong>: state就是rnn网络中rnn cell的状态，比如说如果你的rnn定义包含了N个单元（也就是你的self.state_size是个整数N），那么在你每次执行RNN网络时就应该给一个 [batch_size,self.state_size] 形状的2D Tensor来表示当前RNN网络的状态，而如果你的 self.state_size 是一个元祖，那么给定的状态也应该是一个Tuple，每个Tuple里的状态表示和之前的方式一样。</p>
+<ul>
+<li>如果定义了 “self.state_size”这个属性，并且取值为一个整数，那么RNNCell则会同时输出一个状态矩阵（State Matrix），包含 “self.state_size” 列。</li>
+<li>如果 “self.state_size” 定义为一个整数的Tuple，那么则是输出对应长度的状态矩阵的Tuple，Tuple中的每一个状态矩阵长度还是和之前的一样，包含 “self.state_size” 列。</li>
+</ul>
+<p>RNNCell其主要是zero_state()和call()两个函数。</p>
+<ul>
+<li>zero_state 用于初始化初始状态 h0 为全零向量。</li>
+<li>call 定义实际的RNNCell的操作（比如RNN就是一个激活，GRU的两个门，LSTM的三个门控等，不同的RNN的区别主要体现在这个函数）。</li>
+</ul>
+<p>除了call方法外，对于RNNCell，还有两个类属性比较重要，其中 state_size() 和 output_size() 方法设置为类属性，可以当做属性来调用（这里用到的是Python内置的@property装饰器，就是负责把一个方法变成属性调用的，很像C#中的属性、字段的那种概念）：</p>
+<ul>
+<li>state_size，是隐层的大小（代表 Cell 的状态 state 大小）</li>
+<li>output_size，是输出的大小（输出维度）</li>
+</ul>
+<p>比如我们通常是将一个batch送入模型计算，设输入数据的形状为(batch_size, input_size)，那么计算时得到的隐层状态就是(batch_size, state_size)，输出就是(batch_size, output_size)。</p>
+<p>但这里两个方法都没有实现，意思是说我们必须要实现一个子类继承 RNNCell 类并实现这两个方法。</p>
+<pre><code class="language-python">class RNNCell(base_layer.Layer):
+
+  def __call__(self, inputs, state, scope=None):
+    if scope is not None:
+      with vs.variable_scope(scope,
+                             custom_getter=self._rnn_get_variable) as scope:
+        return super(RNNCell, self).__call__(inputs, state, scope=scope)
+    else:
+      with vs.variable_scope(vs.get_variable_scope(),
+                             custom_getter=self._rnn_get_variable):
+        return super(RNNCell, self).__call__(inputs, state)
+
+  def _rnn_get_variable(self, getter, *args, **kwargs):
+    variable = getter(*args, **kwargs)
+    if context.in_graph_mode():
+      trainable = (variable in tf_variables.trainable_variables() or
+                   (isinstance(variable, tf_variables.PartitionedVariable) and
+                    list(variable)[0] in tf_variables.trainable_variables()))
+    else:
+      trainable = variable._trainable  # pylint: disable=protected-access
+    if trainable and variable not in self._trainable_weights:
+      self._trainable_weights.append(variable)
+    elif not trainable and variable not in self._non_trainable_weights:
+      self._non_trainable_weights.append(variable)
+    return variable
+
+  @property
+  def state_size(self):
+    raise NotImplementedError("Abstract method")
+
+  @property
+  def output_size(self):
+    raise NotImplementedError("Abstract method")
+
+  def build(self, _):
+    pass
+
+  def zero_state(self, batch_size, dtype):
+    with ops.name_scope(type(self).__name__ + "ZeroState", values=[batch_size]):
+      state_size = self.state_size
+      return _zero_state_tensors(state_size, batch_size, dtype)
+</code></pre>
+<h4 id="212-call">2.1.2 call</h4>
+<p><strong>每个派生的RNNCell必须有以下的属性并实现具有如下函数签名的函数(output, next_state) = call(input, state)。</strong> 可选的第三个输入参数 ‘scope’，用于向下兼容，给子类定制化使用。scope传入的值是tf.Variable类型，用于更方便的管理变量。</p>
+<blockquote>
+<p>从给定的state开始运行，根据rnn cell的输入</p>
+<p>args:</p>
+<blockquote>
+<p>inputs：是一个具有二维的张量shape为[batch_size, input_size]<br>
+states：如果 <code>self.state_size</code> 是一个整数，state就应该是一个二维张量 shape是 <code>[batch_size, self.state_size]</code>,否则，如果 <code>self.state_size</code> 是一个整数的tuple（例如LSTM需要计算cell state和 hidden unit state ，就是一个tuple），那么state就应该是<code>[batch_size, s] for s in self.state_size</code> 形状的tuple。<br>
+Scope：由其他子类创建的变量。</p>
+</blockquote>
+<p>Return：</p>
+<blockquote>
+<p>是一对，包括：<br>
+输出：<code>[batch_size, self.output_size]</code>State: 和state相匹配的shape</p>
+</blockquote>
+</blockquote>
+<p><strong>每调用一次RNNCell的call方法，就相当于在时间上“推进了一步”，这就是RNNCell的基本功能。</strong></p>
+<h3 id="22-basicrnncell（基础类）">2.2 BasicRNNCell（基础类）</h3>
+<h4 id="221-基础">2.2.1 基础</h4>
+<p>RNNCell只是一个抽象类，我们用的时候都是用的它的两个子类 BasicRNNCell 和 BasicLSTMCell。顾名思义，前者是RNN的基础类，后者是LSTM的基础类。</p>
+<p>BasicRNNCell 就是我们常说的 RNN。<br>
+<img src="https://img-blog.csdnimg.cn/20200325151904907.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTI4NTY4NjY=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+最简单的RNN结构如上图所示。其代码如下：</p>
+<pre><code class="language-python">class BasicRNNCell(RNNCell):
+  def __init__(self, num_units, activation=None, reuse=None):
+    super(BasicRNNCell, self).__init__(_reuse=reuse)
+    self._num_units = num_units
+    self._activation = activation or math_ops.tanh
+    self._linear = None
+
+  @property
+  def state_size(self):
+    return self._num_units
+
+  @property
+  def output_size(self):
+    return self._num_units
+
+  def call(self, inputs, state):
+    """Most basic RNN: output = new_state = act(W * input + U * state + B)."""
+    if self._linear is None:
+      self._linear = _Linear([inputs, state], self._num_units, True)
+
+    output = self._activation(self._linear([inputs, state]))
+    # output = Ht = tanh([x,Ht-1]*W + B)
+    # 一个output作为下一时刻的输入Ht，另一个作为下一层的输入 Ht
+    return output, output
+</code></pre>
+<h4 id="232-参数意义">2.3.2 参数意义</h4>
+<p>可以看到在初始化 <code>__init__</code>中有若干参数。</p>
+<pre><code class="language-python">def __init__(self, num_units, activation=None, reuse=None):
+</code></pre>
+<p><code>__init__</code>最重要的一个参数是 num_units，意思就是<u>这个 Cell 中神经元的个数</u>，另外还有一个参数 activation 即默认使用的激活函数，默认使用的 tanh，reuse 代表该 Cell 是否可以被重新使用。</p>
+<p>我们知道一个最基本的RNN单元中有三个可训练的参数W, U, B，以及两个输入变量。所以我们在构造RNN的时候就需要指定各个参数的维度了。</p>
+<p><img src="https://img-blog.csdnimg.cn/20181030162931251.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1RoZV9sYXN0ZXN0,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"><br>
+注，上图中的<code>n</code>表示的是输入的维度dim</p>
+<p>从源码中可以看出BasicRNNCell中：</p>
+<ul>
+<li>state_size 就是num_units : <code>def state_size(self):  return self._num_units</code></li>
+<li>output_size 就是num_units : <code>def output_size(self):  return self._num_units</code></li>
+<li>即 把state_size和output_size定义成相同，</li>
+<li>ht和output也是相同的（call函数输出是两个output ：<code>return output, output</code>，即其并未定义输出部分）。</li>
+<li>从 _linear 可以看出，<code>output_size</code>指的是偏置B的维度（下文会讲解 _Linear）。</li>
+</ul>
+<h4 id="223-功能">2.2.3 功能</h4>
+<p>其主要功能实现就是call函数的第一行注释，就是input和前一时刻状态state经过一个线性函数在经过一个激活函数即可，也就是最普通的RNN定义方式。也就是说</p>
+<pre><code class="language-python">output = new_state = f(W * input + U * state + B) = act(W * input + U * state + B)
+</code></pre>
+<p>在 state_size()、output_size() 方法里，其返回的内容都是 num_units，即神经元的个数。</p>
+<p>接下来 call() 方法中：</p>
+<ul>
+<li>
+<p>传入的参数为 inputs 和 state，即输入的 x 和 上一次的隐含状态</p>
+</li>
+<li>
+<p>首先实例化了一个 _Linear 类，这个类实际上就是做线性变换的类，将二者传递过来，然后直接调用，就实现了 w * [inputs, state] + b 的线性变换 ： <code>output = new_state = tanh(W * input + U * state + B).</code></p>
+</li>
+<li>
+<p>其次回到 BasicRNNCell 的 call() 方法中，在 _linear() 方法外面又包括了一层 _activation() 方法，即对线性变换应用一次 tanh 激活函数处理，作为输出结果。</p>
+</li>
+<li>
+<p>最后返回的结果是 output 和 output，第一个代表 output，第二个代表隐状态，其值也等于 output。</p>
+</li>
+</ul>
+<h4 id="224-linear">2.2.4 Linear</h4>
+<p>上面写到使用了 _linear 类，现在我们就介绍下。</p>
+<p>这个类传递了 [inputs, state] 作为 <strong>call</strong>() 方法的 args，会执行 concat() 和 matmul() 方法，然后接着再执行 bias_add() 方法，这样就<u>实现了线性变换</u>。</p>
+<p>而output_size是输出层的大小，我们可以看到</p>
+<ul>
+<li>BasicRNNCell中，output_size就是_num_units；</li>
+<li>GRUCell中是2 * _num_units；</li>
+<li>BasicLSTMCell中是4 * _num_units；</li>
+</ul>
+<p>这是因为_linear中执行的是RNN中的几个等式的 <code>Wx + Uh + B</code> 的功能，但是不同的RNN中数量不同，比如LSTM中需要计算四次，然后直接把output_size定义为4_num_units，再把输出进行拆分成四个变量即可。</p>
+<p>下面是源码缩减版</p>
+<pre><code class="language-python">class _Linear(object):
+
+  def __init__(self, args, output_size, build_bias, bias_initializer=None,
+               kernel_initializer=None):
+    
+    self._build_bias = build_bias
+    
+    if not nest.is_sequence(args):
+      args = [args]
+      self._is_sequence = False
+    else:
+      self._is_sequence = True
+
+    # Calculate the total size of arguments on dimension 1.
+    total_arg_size = 0
+    shapes = [a.get_shape() for a in args]
+    for shape in shapes:
+	    total_arg_size += shape[1].value
+
+    dtype = [a.dtype for a in args][0]
+
+  # 循环该函数 num_step(句子长度) 次，则该层计算完；
+  def __call__(self, args):
+
+    # 如果是第 0 时刻，那么当前的 state(即上一时刻的输出H0)的值全部为0；
+    # input 的 shape为: [batch_size, emb_size]
+    # state 的 shape为：[batch_zize, Hidden_size]
+    # matmul : 矩阵相乘
+    # array_ops.concat: 两个矩阵连接,连接后的 shape 为 [batch_size,input_size + Hidden_size],实际就是[Xt,Ht-1]    
+    
+    if not self._is_sequence:
+      args = [args]
+
+    if len(args) == 1:
+      res = math_ops.matmul(args[0], self._weights)
+    else:
+      # 此时计算: [input,state] * [W,U] == [Xt,Ht-1] * W，得到的shape为:[batch_size,Hidden_size] 
+      res = math_ops.matmul(array_ops.concat(args, 1), self._weights)
+    
+    # B 的shape 为:【Hidden_size】
+    # [Xt,Ht-1] * W 计算后的shape为：[batch_size,Hidden_size]
+    # nn_ops.bias_add,这个函数的计算方法是，让每个 batch 得到的值，都加上这个 B
+	  # 加上B后：Ht = tanh([Xt, Ht-1] * W + B),得到的 shape 还是: [batch_size,Hidden_size]
+	  # 那么这个 Ht 将作为下一时刻的输入和下一层的输入；    
+    if self._build_bias:
+      res = nn_ops.bias_add(res, self._biases)
+    return res
+</code></pre>
+<h3 id="23-grucell">2.3 GRUCell</h3>
+<p>GRU，Gated Recurrent Unit。在 GRU 中，只有两个门：重置门（Reset Gate）和更新门（Update Gate）。同时在这个结构中，把 Ct 和隐藏状态进行了合并，整体结构比标准的 LSTM 结构要简单，而且这个结构后来也非常流行。</p>
+<p>接下来我们看一下GRU的定义，相比BasicRNNCell只改变了call函数部分，增加了重置门和更新门两部分，分别由r和u表示。然后c表示要更新的状态值。其对应的图及公式如下所示：<br>
+<img src="https://img-blog.csdnimg.cn/20200325154030552.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTI4NTY4NjY=,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" loading="lazy"></p>
+<pre><code class="language-python">r = f(W1 * input + U1 * state + B1)
+u = f(W2 * input + U2 * state + B2)
+c = f(W3 * input + U3 * r * state + B3)
+h_new = u * h + (1 - u) * c
+</code></pre>
+<p>GRUCell的实现代码缩减版如下：</p>
+<pre><code class="language-python">class GRUCell(RNNCell):
+    
+  def __init__(self,
+               num_units,
+               activation=None,
+               reuse=None,
+               kernel_initializer=None,
+               bias_initializer=None):
+    super(GRUCell, self).__init__(_reuse=reuse)
+    self._num_units = num_units
+    self._activation = activation or math_ops.tanh
+    self._kernel_initializer = kernel_initializer
+    self._bias_initializer = bias_initializer
+    self._gate_linear = None
+    self._candidate_linear = None
+
+  @property
+  def state_size(self):
+    return self._num_units
+
+  @property
+  def output_size(self):
+    return self._num_units
+
+  def call(self, inputs, state):
+
+    value = math_ops.sigmoid(self._gate_linear([inputs, state]))
+    r, u = array_ops.split(value=value, num_or_size_splits=2, axis=1)
+
+    r_state = r * state
+    if self._candidate_linear is None:
+      with vs.variable_scope("candidate"):
+        self._candidate_linear = _Linear(
+            [inputs, r_state],
+            self._num_units,
+            True,
+            bias_initializer=self._bias_initializer,
+            kernel_initializer=self._kernel_initializer)
+    c = self._activation(self._candidate_linear([inputs, r_state]))
+    new_h = u * state + (1 - u) * c
+    return new_h, new_h
+</code></pre>
+<p>具体函数功能解析如下：</p>
+<p>在 state_size()、output_size() 方法里，其返回的内容都是 num_units，即神经元的个数。</p>
+<p>call() 方法中，因为 Reset Gate rt 和 Update Gate zt 分别用变量 r、u 表示，它们需要先对 ht-1 即 state 和 xt 做合并，然后再实现线性变换，再调用 sigmod 函数得到：</p>
+<pre><code class="language-python">value = math_ops.sigmoid(self._gate_linear([inputs, state]))
+r, u = array_ops.split(value=value, num_or_size_splits=2, axis=1)
+</code></pre>
+<p>然后需要求解 ht~，首先用 rt 和 ht-1 即 state 相乘：</p>
+<pre><code class="language-python">r_state = r * state
+</code></pre>
+<p>然后将其放到线性函数里面 <code>_Linear</code> ，再调用 tanh 激活函数即可：</p>
+<pre><code class="language-python">c = self._activation(self._candidate_linear([inputs, r_state]))
+</code></pre>
+<p>最后计算隐含状态和输出结果，二者一致：</p>
+<pre><code class="language-python">new_h = u * state + (1 - u) * c
+</code></pre>
+<p>这样即可返回得到输出结果和隐藏状态。</p>
+<pre><code class="language-python">return new_h, new_h
+</code></pre>
+<h3 id="24-自定义rnncell">2.4 自定义RNNCell</h3>
+<p>自定义RNNCell的方法比较简单，那就是继承_LayerRNNCell这个抽象类，然后一定要实现__init__、build、__call__这三个函数就行了，其中在call函数中实现自己需要的功能即可。（注意：build只调用一次，在build中进行变量实例化，在call中实现具体的rnncell操作）。</p>
+<h3 id="25-dien之vecattgrucell">2.5 DIEN之VecAttGRUCell</h3>
+<p>调用VecAttGRUCell的代码如下：</p>
+<pre><code class="language-python">rnn_outputs2, final_state2 = dynamic_rnn(VecAttGRUCell(HIDDEN_SIZE), inputs=rnn_outputs,                                         att_scores = tf.expand_dims(alphas, -1),                                         sequence_length=self.seq_len_ph, dtype=tf.float32,                                         scope="gru2")
+</code></pre>
+<p>首先我们要注意到 tf.expand_dims的使用，这个函数是用来把 alphas 增加一维。</p>
+<pre><code class="language-python">alphas = Tensor("Attention_layer_1/Reshape_4:0", shape=(?, ?), dtype=float32)
+</code></pre>
+<p>-1 表示在最后增加一维。</p>
+<pre><code class="language-java">att_scores = tf.expand_dims(alphas, -1)
+</code></pre>
+<p>阿里在这里做的修改主要是call函数，是关于att_score的修改：</p>
+<pre><code class="language-python">u = (1.0 - att_score) * u
+new_h = u * state + (1 - u) * c
+return new_h, new_h    
+</code></pre>
+<p>具体代码是：</p>
+<pre><code class="language-python">def call(self, inputs, state, att_score=None):
+    ......
+    c = self._activation(self._candidate_linear([inputs, r_state]))
+    u = (1.0 - att_score) * u  # 这里是新增加的
+    new_h = u * state + (1 - u) * c # 这里是新增加的
+    return new_h, new_h
+</code></pre>
+<p>其中运行时变量如下：</p>
+<pre><code class="language-java">inputs = {Tensor} Tensor("rnn_2/gru2/while/TensorArrayReadV3:0", shape=(?, 36), dtype=float32)
+state = {Tensor} Tensor("rnn_2/gru2/while/Identity_2:0", shape=(?, 36), dtype=float32)
+att_score = {Tensor} Tensor("rnn_2/gru2/while/strided_slice:0", shape=(?, 1), dtype=float32)
+new_h = {Tensor} Tensor("rnn_2/gru2/while/add_1:0", shape=(?, 36), dtype=float32)
+u = {Tensor} Tensor("rnn_2/gru2/while/mul_1:0", shape=(?, 36), dtype=float32)
+c = {Tensor} Tensor("rnn_2/gru2/while/Tanh:0", shape=(?, 36), dtype=float32)
+</code></pre>
+<p>具体对应论文中就是：</p>
+<p><img src="https://img2020.cnblogs.com/blog/1850883/202011/1850883-20201106212155260-1341227270.png" alt="" loading="lazy"></p>
+<h2 id="0x03-rnn">0x03 RNN</h2>
+<h3 id="31-一次执行多步">3.1 一次执行多步</h3>
+<h4 id="311-基础">3.1.1 基础</h4>
+<p>基础的RNNCell有一个很明显的问题：对于单个的RNNCell，我们使用它的call函数进行运算时，只是在序列时间上前进了一步。比如使用x1、h0得到h1，通过x2、h1得到h2等<strong>。这样的h话，如果我们的序列长度为10，就要调用10次call函数，比较麻烦。对此，TensorFlow提供了一个tf.nn.dynamic_rnn函数，使用该函数就相当于调用了n次call函数。</strong>即通过{h0,x1, x2, …., xn}直接得{h1,h2…,hn}。</p>
+<pre><code class="language-python">def dynamic_rnn(cell, inputs, att_scores=None, sequence_length=None, initial_state=None,
+                dtype=None, parallel_iterations=None, swap_memory=False,
+                time_major=False, scope=None):
+</code></pre>
+<p>重要参数介绍：</p>
+<ul>
+<li><strong>cell</strong>：LSTM、GRU等的记忆单元。cell参数代表一个LSTM或GRU的记忆单元，也就是一个cell。例如，cell = tf.nn.rnn_cell.LSTMCell((num_units)，其中，num_units表示rnn cell中神经元个数，也就是下文的cell.output_size。返回一个LSTM或GRU cell，作为参数传入。</li>
+<li><strong>inputs</strong>：输入的训练或测试数据，一般格式为[batch_size, max_time, embed_size]，其中batch_size是输入的这批数据的数量，max_time就是这批数据中序列的最长长度，embed_size表示嵌入的词向量的维度。</li>
+<li><strong>sequence_length</strong>：是一个list，假设你输入了三句话，且三句话的长度分别是5,10,25,那么sequence_length=[5,10,25]。</li>
+<li><strong>time_major</strong>：决定了输出tensor的格式，如果为True, 张量的形状必须为 [max_time, batch_size,cell.output_size]。如果为False, tensor的形状必须为[batch_size, max_time, cell.output_size]，cell.output_size表示rnn cell中神经元个数。</li>
+</ul>
+<p>返回值如下：</p>
+<p>outputs就是time_steps步里所有的输出。它的形状为(batch_size, time_steps, cell.output_size)。</p>
+<p>state是最后一步的隐状态，它的形状为(batch_size, cell.state_size)。</p>
+<p>详细如下：</p>
+<ul>
+<li><strong>outputs</strong>. outputs是一个tensor，是每个step的输出值。
+<ul>
+<li>如果time_major==True，outputs形状为 [max_time, batch_size, cell.output_size ]（要求rnn输入与rnn输出形状保持一致）</li>
+<li>如果time_major==False（默认），outputs形状为 [ batch_size, max_time, cell.output_size ]</li>
+</ul>
+</li>
+<li><strong>state.</strong> state是一个tensor。state是最终的状态，也就是序列中最后一个cell输出的状态。一般情况下state的形状为 [batch_size, cell.output_size ]，但当输入的cell为BasicLSTMCell时，state的形状为[2，batch_size, cell.output_size ]，其中2也对应着LSTM中的cell state和hidden state</li>
+</ul>
+<p>max_time就是这批数据中序列的最长长度，如果输入的三个句子，那max_time对应的就是最长句子的单词数量，cell.output_size其实就是rnn cell中神经元的个数。</p>
+<h4 id="312-使用">3.1.2 使用</h4>
+<p>假设们输入数据的格式为(batch_size, time_steps, input_size)，其中：</p>
+<ul>
+<li>batch_size是输入的这批数据的数量；</li>
+<li>time_steps表示序列本身的长度，如在Char RNN中，长度为10的句子对应的time_steps就等于10；</li>
+<li>input_size就表示输入数据单个序列单个时间维度上固有的长度；</li>
+</ul>
+<p>如下我们已经定义好了一个RNNCell，调用该RNNCell的call函数time_steps次</p>
+<pre><code class="language-python"># inputs: shape = (batch_size, time_steps, input_size) 
+# cell: RNNCell
+# initial_state: shape = (batch_size, cell.state_size)。初始状态。一般可以取零矩阵
+outputs, state = tf.nn.dynamic_rnn(cell, inputs, initial_state=initial_state)
+</code></pre>
+<p>对于参数举例如下：</p>
+<blockquote>
+<p>样本数据：</p>
+<blockquote>
+<p>小明爱学习</p>
+<p>小王爱学习</p>
+<p>小李爱学习</p>
+<p>小花爱学习</p>
+</blockquote>
+<p>通常样本数据会以 <code>(batch_size, time_step, embedding_size)</code> 送入模型，对应的可以是（4，5，100）。</p>
+<p>4表示批量送入也就是（小，小，小，小）第二批是（明，王，李，花）…</p>
+<p>5表示时间步长，一句话共5个字。</p>
+</blockquote>
+<p>又比如如下代码：</p>
+<pre><code class="language-python">import tensorflow as tf
+import numpy as np
+from tensorflow.python.ops import variable_scope as vs
+
+output_size = 5
+batch_size = 4
+time_step = 3
+dim = 3
+cell = tf.nn.rnn_cell.BasicRNNCell(num_units=output_size)
+inputs = tf.placeholder(dtype=tf.float32, shape=[time_step, batch_size, dim])
+h0 = cell.zero_state(batch_size=batch_size, dtype=tf.float32)
+X = np.array([[[1, 2, 1], [2, 0, 0], [2, 1, 0], [1, 1, 0]],  # x1
+              [[1, 2, 1], [2, 0, 0], [2, 1, 0], [1, 1, 0]],  # x2
+              [[1, 2, 1], [2, 0, 0], [2, 1, 0], [1, 1, 0]]])  # x3
+outputs, final_state = tf.nn.dynamic_rnn(cell, inputs, initial_state=h0, time_major=True)
+
+sess = tf.Session()
+sess.run(tf.global_variables_initializer())
+a, b = sess.run([outputs, final_state], feed_dict={inputs:X})
+print(a)
+print(b)
+</code></pre>
+<h4 id="313-time_step">3.1.3 time_step</h4>
+<p>具体解释如下：</p>
+<blockquote>
+<p><strong>文字数据</strong></p>
+<p>如果数据有1000段时序的句子，每句话有25个字，对每个字进行向量化，每个字的向量维度为300，那么batch_size=1000，time_steps=25，input_size=300。</p>
+<p>解析：time_steps一般情况下就是等于句子的长度，input_size等于字量化后向量的长度。</p>
+<p><strong>图片数据</strong></p>
+<p>拿MNIST手写数字集来说，训练数据有6000个手写数字图像，每个数字图像大小为28*28，batch_size=6000没的说，time_steps=28，input_size=28，我们可以理解为把图片图片分成28份，每份shape=(1, 28)。</p>
+<p><strong>音频数据</strong></p>
+<p>如果是单通道音频数据，那么音频数据是一维的，假如shape=(8910,)。使用RNN的数据必须是二维的，这样加上batch_size，数据就是三维的，第一维是batch_size，第二维是time_steps，第三位是数据input_size。我们可以把数据reshape成三维数据。这样就能使用RNN了。</p>
+</blockquote>
+<h3 id="32-如何循环调用">3.2 如何循环调用</h3>
+<p>dnn有static和dynamic的分别。</p>
+<ul>
+<li>static_rnn会把RNN展平，用空间换时间。</li>
+<li>dynamic_rnn则是使用for或者while循环。</li>
+</ul>
+<p>调用static_rnn实际上是生成了rnn按时间序列展开之后的图。打开tensorboard你会看到sequence_length个rnn_cell stack在一起，只不过这些cell是share weight的。因此，sequence_length就和图的拓扑结构绑定在了一起，因此也就限制了每个batch的sequence_length必须是一致。</p>
+<p>调用dynamic_rnn不会将rnn展开，而是利用tf.while_loop这个api，通过Enter, Switch, Merge, LoopCondition, NextIteration等这些control flow的节点，生成一个可以执行循环的图（这个图应该还是静态图，因为图的拓扑结构在执行时是不会变化的）。在tensorboard上，你只会看到一个rnn_cell, 外面被一群control<br>
+flow节点包围着。对于dynamic_rnn来说，sequence_length仅仅代表着循环的次数，而和图本身的拓扑没有关系，所以每个batch可以有不同sequence_length。</p>
+<p>对于DIEN，程序运行时候，堆栈如下：</p>
+<pre><code class="language-java">call, utils.py:144
+__call__, utils.py:114
+&lt;lambda&gt;, rnn.py:752
+_rnn_step, rnn.py:236
+_time_step, rnn.py:766
+_BuildLoop, control_flow_ops.py:2590
+BuildLoop, control_flow_ops.py:2640
+while_loop, control_flow_ops.py:2816
+_dynamic_rnn_loop, rnn.py:786
+dynamic_rnn, rnn.py:615
+__init__, model.py:364
+train, train.py:142
+&lt;module&gt;, train.py:231
+</code></pre>
+<p>循环的实现主要是在 control_flow_ops.py 之中。</p>
+<p>while_loop 会 在 cond 参数为true时候，一直循环 body 参数对应的代码。</p>
+<pre><code class="language-python">def while_loop(cond, body, loop_vars, shape_invariants=None,
+               parallel_iterations=10, back_prop=True, swap_memory=False,
+               name=None):
+  """Repeat `body` while the condition `cond` is true.
+
+  `cond` is a callable returning a boolean scalar tensor. `body` is a callable
+  returning a (possibly nested) tuple, namedtuple or list of tensors of the same
+  arity (length and structure) and types as `loop_vars`. `loop_vars` is a
+  (possibly nested) tuple, namedtuple or list of tensors that is passed to both
+  `cond` and `body`. `cond` and `body` both take as many arguments as there are
+  `loop_vars`.
+
+  Args:
+    cond: A callable that represents the termination condition of the loop.
+    body: A callable that represents the loop body.
+    loop_vars: A (possibly nested) tuple, namedtuple or list of numpy array,
+      `Tensor`, and `TensorArray` objects.
+  """
+    if context.in_eager_mode():
+      while cond(*loop_vars):
+        loop_vars = body(*loop_vars)
+      return loop_vars
+
+    if shape_invariants is not None:
+      nest.assert_same_structure(loop_vars, shape_invariants)
+
+    loop_context = WhileContext(parallel_iterations, back_prop, swap_memory)  # pylint: disable=redefined-outer-name
+    ops.add_to_collection(ops.GraphKeys.WHILE_CONTEXT, loop_context)
+    result = loop_context.BuildLoop(cond, body, loop_vars, shape_invariants)
+    return result
+</code></pre>
+<p>比如如下例子：</p>
+<pre><code class="language-python">i = tf.constant(0)
+c = lambda i: tf.less(i, 10)
+b = lambda i: tf.add(i, 1)
+r = tf.while_loop(c, b, [i])
+print(sess.run(r) ) # 10
+</code></pre>
+<p>在rnn中，_time_step 就对 while_loop 进行了调用，这样就完成了迭代。</p>
+<pre><code class="language-python">      _, output_final_ta, final_state = control_flow_ops.while_loop(
+          cond=lambda time, *_: time &lt; time_steps,
+          body=_time_step,
+          loop_vars=(time, output_ta, state),
+          parallel_iterations=parallel_iterations,
+          swap_memory=swap_memory)
+</code></pre>
+<h3 id="33-dien之rnn">3.3. DIEN之rnn</h3>
+<p>DIEN项目中，修改的部分主要是_time_step函数，因为需要加入att_scores参数。</p>
+<p>其主要是：</p>
+<ul>
+<li>通过 <code>lambda: cell(input_t, state, att_score)</code> 调用 cell # call 函数，即我们事先写的业务逻辑；</li>
+<li>通过调用 <code>control_flow_ops.while_loop(cond=lambda time, *_: time &lt; time_steps, body=_time_step...)</code> 来进行循环迭代；</li>
+</ul>
+<p>缩减版代码如下：</p>
+<pre><code class="language-python">  def _time_step(time, output_ta_t, state, att_scores=None):
+    """Take a time step of the dynamic RNN.
+    Args:
+      time: int32 scalar Tensor.
+      output_ta_t: List of `TensorArray`s that represent the output.
+      state: nested tuple of vector tensors that represent the state.
+
+    Returns:
+      The tuple (time + 1, output_ta_t with updated flow, new_state).
+    """
+
+    ......
+    
+    if att_scores is not None:
+        att_score = att_scores[:, time, :]
+        call_cell = lambda: cell(input_t, state, att_score)
+    else:
+        call_cell = lambda: cell(input_t, state)
+        
+    ......
+
+    output_ta_t = tuple(
+        ta.write(time, out) for ta, out in zip(output_ta_t, output))
+    
+    if att_scores is not None:
+        return (time + 1, output_ta_t, new_state, att_scores)
+    else:
+        return (time + 1, output_ta_t, new_state)
+
+  if att_scores is not None:  
+      _, output_final_ta, final_state, _ = control_flow_ops.while_loop(
+          cond=lambda time, *_: time &lt; time_steps,
+          body=_time_step,
+          loop_vars=(time, output_ta, state, att_scores),
+          parallel_iterations=parallel_iterations,
+          swap_memory=swap_memory)
+  else:
+      _, output_final_ta, final_state = control_flow_ops.while_loop(
+          cond=lambda time, *_: time &lt; time_steps,
+          body=_time_step,
+          loop_vars=(time, output_ta, state),
+          parallel_iterations=parallel_iterations,
+          swap_memory=swap_memory)
+
+    ......
+</code></pre>
+<h2 id="0xff-参考">0xFF 参考</h2>
+<p><a href="https://blog.csdn.net/qq_34218078/article/details/100877167">通过代码学习RNN，彻底弄懂time_step</a></p>
+<p><a href="https://blog.csdn.net/qq_26591517/article/details/82724552">LSTM 实际神经元隐含层物理架构原理解析</a></p>
+<p><a href="https://blog.csdn.net/RosebudTT/article/details/107847668">机器学习之LSTM</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/28196873">知乎-何之源：TensorFlow中RNN实现的正确打开方式</a></p>
+<p><a href="https://blog.csdn.net/mydear_11000/article/details/52414342">解读tensorflow之rnn</a></p>
+<p><a href="https://www.cnblogs.com/punkcure/p/8240989.html">char-rnn-tensorflow源码解析及结构流程分析</a></p>
+<p><a href="https://www.cnblogs.com/xiaochouk/p/8746302.html">循环神经网络（LSTM和GRU）(2)</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/28196873">TensorFlow中RNN实现的正确打开方式</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/28054589">完全图解RNN、RNN变体、Seq2Seq、Attention机制</a></p>
+<p><a href="https://blog.csdn.net/u012856866/article/details/105095442/">Tensorflow中RNNCell源码解析</a></p>
+<p><a href="https://blog.csdn.net/liuchonge/article/details/78405185">tensorflow中RNNcell源码分析以及自定义RNNCell的方法</a></p>
+<p><a href="https://blog.csdn.net/huang_owen/article/details/80943772">Tensorflow rnn_cell api 阅读笔记</a></p>
+<p><a href="https://blog.csdn.net/The_lastest/article/details/83544280">循环神经网络系列（一）Tensorflow中BasicRNNCell</a></p>
+<p><a href="https://blog.csdn.net/The_lastest/article/details/83661632">循环神经网络系列（二）Tensorflow中dynamic_rnn</a></p>
+<p><a href="https://blog.csdn.net/zhylhy520/article/details/82631736">LSTM中tf.nn.dynamic_rnn处理过程详解</a></p>
+<p><a href="https://blog.csdn.net/persistinlife/article/details/106315287">小白循环神经网络RNN LSTM 参数数量 门单元 cell units timestep batch_size</a></p>
+<p><a href="https://blog.csdn.net/u014595019/article/details/52759104">tensorflow笔记：多层LSTM代码分析</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/51860702">Tensorflow dynamic rnn，源代码的逐行解读</a></p>
+<p><a href="https://blog.csdn.net/wh1312142954/article/details/80213117">Tensorflow RNN源码理解</a></p>
+<p><a href="https://blog.csdn.net/mebiuw/article/details/60780813">Tensorflow RNN源代码解析笔记1：RNNCell的基本实现</a></p>
+<p><a href="https://blog.csdn.net/MebiuW/article/details/62424586">Tensorflow RNN源代码解析笔记2：RNN的基本实现</a></p>
+<p><a href="https://blog.csdn.net/qq_41856814/article/details/103605612">【tensorflow】static_rnn与dynamic_rnn的区别</a></p>
+
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+    <div id="blog_post_info"></div>
+    <div class="clear"></div>
+    <div id="post_next_prev"></div>
+</div>
+            </div>
+            <div class="postDesc">posted @ 
+<span id="post-date">2020-11-07 08:40</span>&nbsp;
+<a href="https://www.cnblogs.com/rossiXYZ/">罗西的思考</a>&nbsp;
+阅读(<span id="post_view_count">17</span>)&nbsp;
+评论(<span id="post_comment_count">0</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=13939001" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(13939001);return false;">收藏</a></div>
+        </div>
+        <script src="https://common.cnblogs.com/highlight/10.3.1/highlight.min.js"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 556264, cb_blogApp = 'rossiXYZ', cb_blogUserGuid = '3d1961d5-3b13-4975-9d25-08d753a9a8fd';
+    var cb_entryId = 13939001, cb_entryCreatedDate = '2020-11-07 08:40', cb_postType = 1;
+    updatePostStats(
+        [cb_entryId],
+        function(id, count) { $("#post_view_count").text(count) },
+        function(id, count) { $("#post_comment_count").text(count) })
+</script>
+        <a name="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+    <div id="comment_form_container"></div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id='div-gpt-ad-1592365906576-0' style='width: 300px; height: 250px;'></div>
+    </div>
+    <div id="under_post_news"></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id='div-gpt-ad-1592366332455-0' style='width: 468px; height: 60px;'></div>
+    </div>
+    <div id="under_post_kb"></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+       var commentManager = new blogCommentManager();
+       commentManager.renderComments(0);
+       fixPostBody();
+       deliverBigBanner();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);       deliverT2();
+       deliverC1C2();
+       loadNewsAndKb();
+       loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);       LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+       GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+       loadOptUnderPost();
+       GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+   </script>
+</div>
+
+    </div>
+</div>
+            </div>
+        </div>
+
+        <div id="sideBar">
+            <div id="sideBarMain">
+                <div id="sidebar_news" class="newsItem">
+            <script>loadBlogNews();</script>
+</div>
+<div id="sidebar_ad"></div>
+                <div id="calendar"><div id="blog-calendar" style="display:none"></div></div>                
+                <script>loadBlogDefaultCalendar();</script>
+                <div id="leftcontentcontainer">
+                    <!-- begin:SingleColumn -->
+                    <div id="blog-sidecolumn"></div>
+                    <script>loadBlogSideColumn();</script>
+                    <!-- end:  SingleColumn -->
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div id="footer">
+        <!--done-->
+Copyright &copy; 2020 罗西的思考
+<br /><span id="poweredby">Powered by .NET 5.0.0-rc.2.20475.5 on Kubernetes</span>
+
+    </div>
+</div>
+
+    
+</body>
+</html>

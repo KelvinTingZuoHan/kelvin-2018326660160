@@ -1,0 +1,7 @@
+C:\Users\zhang\Desktop\exp5\exp5\bin\Debug\exp5.exe.config
+C:\Users\zhang\Desktop\exp5\exp5\bin\Debug\exp5.exe
+C:\Users\zhang\Desktop\exp5\exp5\bin\Debug\exp5.pdb
+C:\Users\zhang\Desktop\exp5\exp5\obj\Debug\HW5.csprojAssemblyReference.cache
+C:\Users\zhang\Desktop\exp5\exp5\obj\Debug\HW5.csproj.CoreCompileInputs.cache
+C:\Users\zhang\Desktop\exp5\exp5\obj\Debug\exp5.exe
+C:\Users\zhang\Desktop\exp5\exp5\obj\Debug\exp5.pdb

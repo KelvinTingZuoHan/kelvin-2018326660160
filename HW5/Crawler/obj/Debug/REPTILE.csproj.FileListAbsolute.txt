@@ -1,0 +1,10 @@
+C:\Users\zhang\Desktop\exp5\Crawler\bin\Debug\Crawler.exe.config
+C:\Users\zhang\Desktop\exp5\Crawler\bin\Debug\Crawler.exe
+C:\Users\zhang\Desktop\exp5\Crawler\bin\Debug\Crawler.pdb
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\REPTILE.csprojAssemblyReference.cache
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\REPTILE.Form1.resources
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\Crawler.Properties.Resources.resources
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\REPTILE.csproj.GenerateResource.cache
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\REPTILE.csproj.CoreCompileInputs.cache
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\Crawler.exe
+C:\Users\zhang\Desktop\exp5\Crawler\obj\Debug\Crawler.pdb

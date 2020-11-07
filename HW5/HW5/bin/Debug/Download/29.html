@@ -1,0 +1,363 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="origin" />
+    <meta name="description" content="macOS使用ABP.vNext Core开发CMS系统（一） 让程序跑起来——2020年10月5日 国庆假期，陪老婆的同时也不能忘记给自己充充电，这不想搞个CMS系统，考虑自己的时间并不多，所以想找" />
+    <meta property="og:description" content="macOS使用ABP.vNext Core开发CMS系统（一） 让程序跑起来——2020年10月5日 国庆假期，陪老婆的同时也不能忘记给自己充充电，这不想搞个CMS系统，考虑自己的时间并不多，所以想找" />
+    <meta http-equiv="Cache-Control" content="no-transform" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>macOS使用ABP.vNext Core开发CMS系统（一） 让程序跑起来 - 陈加炜 - 开发者的网上家园</title>
+    <link id="favicon" rel="shortcut icon" href="//common.cnblogs.com/favicon.svg" type="image/svg+xml" />
+    
+    <link rel="stylesheet" href="/css/blog-common.min.css?v=dktCmaTYc_s0a4EnvC6tuH5wYElIJN_131iOybZOKro" />
+    <link id="MainCss" rel="stylesheet" href="/skins/blacklowkey/bundle-blacklowkey.min.css?v=4KEmaEFoQ72fond65B4U2Zp59N9fvfGhFFxIzkSj97w" />
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="/skins/blacklowkey/bundle-blacklowkey-mobile.min.css?v=cX_jltB7Us4Tw2n_S08_lsTU6B1YdJoNGzly3o8GZ-8" />
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/sexy-programmer/rss" />
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/sexy-programmer/rsd.xml" />
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/sexy-programmer/wlwmanifest.xml" />
+    <script>
+        var currentBlogId = 608635;
+        var currentBlogApp = 'sexy-programmer';
+        var cb_enable_mathjax = false;
+        var isLogined = false;
+        var isBlogOwner = false;
+        var skinName = 'BlackLowKey';
+        var visitorUserId = '';
+    </script>
+        <script>
+            var currentPostDateAdded = '2020-10-05 10:51';
+        </script>
+    <script src="https://common.cnblogs.com/scripts/jquery-2.2.0.min.js"></script>
+    <script src="/js/blog-common.min.js?v=quLP6V96NCUwrp9e9p4Tc3ZzspjwpbJyGVOAQHoms5M"></script>
+    
+    
+    
+</head>
+<body>
+    <a name="top"></a>
+    <div id="top_nav" class="navbar">
+        <nav id="nav_main" class="navbar-main">
+            <ul id="nav_left" class="navbar-list navbar-left">
+                <li class="navbar-branding">
+                    <a href="https://www.cnblogs.com/" title="开发者的网上家园"><img src="/images/logo.svg?v=R9M0WmLAIPVydmdzE2keuvnjl-bPR7_35oHqtiBzGsM" alt="博客园Logo" /></a>
+                </li>
+                <li><a href="/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-sitehome')">首页</a></li>
+                <li><a href="https://news.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-news')">新闻</a></li>
+                <li><a href="https://q.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-q')">博问</a></li>
+                <li><a id="nav_brandzone" href="https://brands.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-brands')">专区</a></li>
+                <li><a href="https://ing.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-ing')">闪存</a></li>
+                <li><a href="https://edu.cnblogs.com/" onclick="ga('send', 'event', 'Link', 'click', 'skin-navbar-edu')">班级</a></li>
+            </ul>
+            <ul id="nav_right" class="navbar-list navbar-right">
+                <li>
+                    <form id="zzk_search" class="navbar-search" action="https://zzk.cnblogs.com/s" method="get">
+                        <input name="w" id="zzk_search_input" placeholder="代码改变世界" type="text" tabindex="3" />
+                        <button type="submit" id="zzk_search_button">
+                            <img src="/images/aggsite/search.svg" alt="搜索" />
+                        </button>
+                    </form>
+                </li>
+                <li id="navbar_login_status" class="navbar-list">
+                    <a id="navblog-myblog-icon" class="navbar-user-info navbar-blog" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx" alt="我的博客" title="我的博客">
+                        <img id="myblog_icon" class="navbar-icon" src="/images/aggsite/myblog.svg" alt="我的博客" />
+                    </a>
+                    <a class="navbar-user-info navbar-message navbar-icon-wrapper" href="https://msg.cnblogs.com/" alt="短消息" title="短消息">
+                        <img id="msg_icon" class="navbar-icon" src="/images/aggsite/message.svg?v=oS4PkibyMjZ9rGD5XAcLt99uW_s76Javy2up4dbnZNY" alt="短消息" />
+                        <span id="msg_count" style="display: none"></span>
+                    </a>
+                    <div id="user_info" class="navbar-user-info dropdown">
+                        <a class="dropdown-button" href="https://home.cnblogs.com/">
+                            <img id="user_icon" class="navbar-avatar" src="/images/aggsite/avatar-default.svg" alt="用户头像" />
+                        </a>
+                        <div class="dropdown-menu">
+                            <a id="navblog-myblog-text" href="https://passport.cnblogs.com/GetBlogApplyStatus.aspx">我的博客</a>
+                            <a href="https://home.cnblogs.com/">我的园子</a>
+                            <a href="https://account.cnblogs.com/settings/account">账号设置</a>
+                            <a href="javascript:void(0)" onclick="logout();">退出登录</a>
+                        </div>
+                    </div>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signup/">注册</a>
+                    <a class="navbar-anonymous" href="https://account.cnblogs.com/signin/?returnUrl=https://www.cnblogs.com/">登录</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    
+    
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+        <a id="lnkBlogLogo" href="https://www.cnblogs.com/sexy-programmer/"><img id="blogLogo" src="/skins/custom/images/logo.gif" alt="返回主页" /></a>		
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/sexy-programmer/">陈加炜</a>
+</h1>
+<h2>
+
+</h2>
+
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+	<div id="navigator">
+		
+<ul id="navList">
+<li><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+<li>
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/sexy-programmer/">
+首页</a>
+</li>
+<li>
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+</li>
+<li>
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/%E9%99%88%E5%8A%A0%E7%82%9C">
+联系</a></li>
+<li>
+<a id="blog_nav_rss" class="menu" href="javascript:void(0)" data-rss="https://www.cnblogs.com/sexy-programmer/rss/">
+订阅</a>
+<!--<partial name="./Shared/_XmlLink.cshtml" model="Model" /></li>--></li>
+<li>
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+</ul>
+
+
+		<div class="blogStats">
+			
+			<span id="stats_post_count">随笔 - 
+2&nbsp; </span>
+<span id="stats_article_count">文章 - 
+0&nbsp; </span>
+<span id="stats-comment_count">评论 - 
+4</span>
+
+			
+		</div><!--end: blogStats -->
+	</div><!--end: navigator 博客导航栏 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="post_detail">
+    <!--done-->
+    <div id="topics">
+        <div class="post">
+            <h1 class = "postTitle">
+                
+<a id="cb_post_title_url" class="postTitle2 vertical-middle" href="https://www.cnblogs.com/sexy-programmer/p/13769511.html">
+    <span>macOS使用ABP.vNext Core开发CMS系统（一） 让程序跑起来</span>
+    
+
+
+</a>
+
+            </h1>
+            <div class="clear"></div>
+            <div class="postBody">
+                
+<div id="cnblogs_post_body" class="blogpost-body">
+    <h2 align="center">macOS使用ABP.vNext Core开发CMS系统（一） 让程序跑起来——2020年10月5日</h2>
+<p>国庆假期，陪老婆的同时也不能忘记给自己充充电，这不想搞个CMS系统，考虑自己的时间并不多，所以想找一套相对成熟的框架来快速开发，码云上找了几个开源项目，感觉都是别人的东西，机缘巧合下，决定使用之前一直没时间用的ABP框架。</p>
+<p>选ABP的几点理由：</p>
+<ul>
+<li>“DRY——避免重复代码”是一个优秀的开发者在开发软件时所具备的最重要的思想之一，而ABP就帮你完成了几乎所有系统开发都需要做的事情，例如登录、用户&amp;角色、权限、国际化等。让你只需要为你的业务添砖加瓦，而不必再去造轮子。</li>
+<li>集成了许多高品质、大型软件的最佳实践，例如分层体系结构、领域驱动设计、依赖注入等技术。数据层采用ORM、数据库迁移（Database Migrations）、日志记录（Logging）等工具。</li>
+<li>集成了Redis、MangoDb等内存数据库。</li>
+<li>客户端可选Angular，号称最适合后端开发人员使用的前端框架，并对其深度集成了常用工具和基础框架。</li>
+</ul>
+<p>项目地址暂时没有放，大家可以关注我的个人码云地址<a href="https://gitee.com/w9" target="——blank">https://gitee.com/w9</a></p>
+<p>项目名称：LionCMs（起名字实在是太困难，真的是拍脑袋，我的英文名是Leo，狮子座，狮子，恩...就Lion吧。莱恩，oh..不是dota里死亡一指的那位？）</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px"><strong>进入官网选择模板</strong></span></p>
+<p><a title="ABP模板官网" href="https://aspnetboilerplate.com/Templates/" target="_blank">https://aspnetboilerplate.com/Templates/</a></p>
+<p><img src="https://img2020.cnblogs.com/blog/2055765/202010/2055765-20201005095826162-2120127497.png" width="1000" loading="lazy"></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;注：<strong>不要</strong>勾选One Solution，挺坑的，前后端都塞一个解决方案里。</p>
+<p>下载完解压</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px"><strong>后端生成</strong></span></p>
+<p>用VisualStudio打开 /LionCms/aspnet-core/LionCms.sln ，他会自动还原NuGet包。</p>
+<p>完了之后在Web.Host项目里找到appsettings.json里找到ConnectionStrings节点下的Default，修改为你的数据库连接字符串。</p>
+<p>然后我这里就挺坑了，我使用的是VisualStudio For Mac，已经没有程序包管理控制台了，需要使用终端还原。</p>
+<p>&nbsp;</p>
+<p>首先查看自己的.Net EF环境</p>
+<div class="cnblogs_code">
+<pre>dotnet ef</pre>
+</div>
+<p><img src="https://img2020.cnblogs.com/blog/2055765/202010/2055765-20201005101019643-1287080218.png" width="500" loading="lazy"></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>出现这个EF小马的图标说明环境正确。不然就需要安装环境了。参考：<a href="https://docs.microsoft.com/zh-cn/ef/core/miscellaneous/cli/dotnet" target="_blank">微软EF官网文档<br></a></p>
+<p>&nbsp;</p>
+<p>好的接下来就是拷贝LionCms.EntityFrameworkCore项目地址，终端输入CD 【你拷贝的项目地址】</p>
+<div class="cnblogs_code">
+<pre>cd /Users/leo-chen/Documents/Work/CodeWarehouse/LionCms/aspnet-core/src/LionCms.EntityFrameworkCore</pre>
+</div>
+<p>&nbsp;</p>
+<p>可以先看一下帮助文档</p>
+<div class="cnblogs_code">
+<pre>dotnet ef database -h</pre>
+</div>
+<p>&nbsp;</p>
+<p>好了看完了我们直接来更新数据库</p>
+<div class="cnblogs_code">
+<pre>dotnet ef database update</pre>
+</div>
+<p>如果我们的数据库一切正常则会进行Migrations的还原。</p>
+<p>&nbsp;</p>
+<p><img src="https://img2020.cnblogs.com/blog/2055765/202010/2055765-20201005102625186-182211031.png" width="500" loading="lazy"></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>如果我要数据库表结构有更新就重新运行这个代码就可以了；</p>
+<p>如果我觉得里面有一些脏数据，不想用整套数据库了。也可以删除了重新再来</p>
+<div class="cnblogs_code">
+<pre>dotnet ef database drop</pre>
+</div>
+<p>提示是否删除按y回车就可以了。</p>
+<p>&nbsp;</p>
+<p>数据库还原了就可以直接运行后端程序了。设置启动项为LionCms.Web.Host，点击运行。</p>
+<p>生成成功后默认地址&nbsp;<a href="http://localhost:21021/swagger/index.html" target="_blank">http://localhost:21021/swagger/index.html</a></p>
+<p><img src="https://img2020.cnblogs.com/blog/2055765/202010/2055765-20201005103514196-1951207486.png" width="1000" loading="lazy"></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><span style="font-size: 18px"><strong>前端生成</strong></span></p>
+<p>前端使用VS Code打开，第一次打开可能会出现一些推荐的插件，都安装即可，号称史上最强插件库的插件怎么能不装呢。安装完之后各种颜色各种提示，还是比较清晰的。</p>
+<p>&nbsp;</p>
+<p>前提要安装完nodeJs，找到终端输入npm install</p>
+<div class="cnblogs_code">
+<pre>npm <span style="color: rgba(0, 0, 255, 1)">install</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>安装完所有的依赖包就可以生成运行拉。</p>
+<div class="cnblogs_code">
+<pre>npm <span style="color: rgba(0, 0, 255, 1)">run start</span></pre>
+</div>
+<p>&nbsp;</p>
+<p>运行之后在浏览器打开&nbsp;<a href="http://localhost:4200/" target="_blank">http://localhost:4200/</a></p>
+<p><span style="background-color: rgba(255, 255, 255, 1); font-family: &quot;PingFang SC&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px">&nbsp;<img src="https://img2020.cnblogs.com/blog/2055765/202010/2055765-20201005104744716-23775631.png" width="500" loading="lazy"></span></p>
+<p>&nbsp;</p>
+<p><span style="background-color: rgba(255, 255, 255, 1); font-family: &quot;PingFang SC&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px"></span></p>
+<p>默认初始账号密码是 admin 123qwe</p>
+<p><img src="https://img2020.cnblogs.com/blog/2055765/202010/2055765-20201005104901478-765483268.png" width="1000" loading="lazy"></p>
+<p>&nbsp;</p>
+<p>进入主页还是比较OK的，而且默认已经提供了几大主要功能。</p>
+<p>&nbsp;</p>
+<p>本次运行总体来说还是有几个小坑 不过都解决了。下期正式开始写业务，敬请期待。</p>
+<p>&nbsp;</p>
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+    <div id="blog_post_info"></div>
+    <div class="clear"></div>
+    <div id="post_next_prev"></div>
+</div>
+            </div>
+            <div class="postDesc">posted @ 
+<span id="post-date">2020-10-05 10:51</span>&nbsp;
+<a href="https://www.cnblogs.com/sexy-programmer/">陈加炜</a>&nbsp;
+阅读(<span id="post_view_count">7</span>)&nbsp;
+评论(<span id="post_comment_count">0</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=13769511" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(13769511);return false;">收藏</a></div>
+        </div>
+	    
+	    
+    </div><!--end: topics 文章、评论容器-->
+</div>
+<script src="https://common.cnblogs.com/highlight/9.12.0/highlight.min.js"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 608635, cb_blogApp = 'sexy-programmer', cb_blogUserGuid = '7569639f-6bb2-44a3-c170-08d80758c286';
+    var cb_entryId = 13769511, cb_entryCreatedDate = '2020-10-05 10:51', cb_postType = 1;
+    loadViewCount(cb_entryId);
+</script><a name="!comments"></a>
+<div id="blog-comments-placeholder"></div>
+<script>
+    var commentManager = new blogCommentManager();
+    commentManager.renderComments(0);
+</script>
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="#" onclick="return RefreshPage();">刷新页面</a><a href="#top">返回顶部</a></div>
+    <div id="comment_form_container"></div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"></div>
+    <div id="opt_under_post"></div>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id='div-gpt-ad-1592365906576-0' style='width: 300px; height: 250px;'></div>
+    </div>
+    <div id="under_post_news"></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id='div-gpt-ad-1592366332455-0' style='width: 468px; height: 60px;'></div>
+    </div>
+    <div id="under_post_kb"></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+        fixPostBody();
+        deliverBigBanner();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);        deliverT2();
+        deliverC1C2();
+        loadNewsAndKb();
+        loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);        LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+        GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+        loadOptUnderPost();
+        GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    </script>
+</div>
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<div id="sidebar_news" class="newsItem">
+            <script>loadBlogNews();</script>
+</div>
+
+<div id="sidebar_ad"></div>
+			<div id="blog-calendar" style="display:none"></div><script>loadBlogDefaultCalendar();</script>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn"></div>
+                    <script>loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		<!--done-->
+Copyright &copy; 2020 陈加炜
+<br /><span id="poweredby">Powered by .NET Core on Kubernetes</span>
+
+
+
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+    
+</body>
+</html>
